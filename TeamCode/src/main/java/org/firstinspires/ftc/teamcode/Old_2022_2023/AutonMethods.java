@@ -14,10 +14,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-public class OldAutonMethods {
+public class AutonMethods {
 
     //Constructor
-    public OldAutonMethods() {
+    public AutonMethods() {
 
     }
 

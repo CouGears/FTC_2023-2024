@@ -30,7 +30,7 @@ public class FunDriving_Liftless extends LinearOpMode {
     private double left = 0;
 
     public void TelemetryUpdate() {
-        telemetry.addData("Drive Switch", driveswitch);
+        telemetry.addData("Drive Mode", driveswitch);
         telemetry.addLine();
         telemetry.addData("Binary Arm Movememt", binaryarmmovement);
         telemetry.addLine();
