@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 //test
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.SensorSet;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -35,18 +35,20 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.AutonMethods;
 
 
 //uncomment the following line to use
 @Autonomous
 
-public class JoshFirstAuton extends OpMode {
+public class OneFootForward extends OpMode {
 
     //TensorFlowVision vision = new TensorFlowVision();
 //   double rev = 383.6; //435 rpm motor
     double rev = 537.7; //312 rpm motor
     double inch = rev / (3.78 * 3.14);
-    double feet = inch * 12;
+    double CalebConstant = 1;
+    double feet = inch * 12 * CalebConstant;
     short sleevenum = 1;
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -76,53 +78,14 @@ public class JoshFirstAuton extends OpMode {
     public void loop() {
         switch (robot.counter) {
             case 0:
-                robot.drive(2*feet, 0*feet, .25);
+                robot.drive(4*feet, 0*feet, .25);
                 robot.counter++;
                 break;
             case 1:
-                robot.turn(-90);
+l
                 robot.counter++;
                 break;
-            case 2:
-                robot.drive(2*feet, 0*feet, .25);
-                robot.counter++;
-                break;
-            case 3:
-                robot.turn(90);
-                robot.counter++;
-                break;
-            case 4:
-                robot.drive(2*feet, 0*feet, .25);
-                robot.counter++;
-                break;
-            case 5:
-                robot.turn(-90);
-                robot.counter++;
-                break;
-            case 6:
-                robot.drive(-6*feet, 0*feet, .25);
-                robot.counter++;
-                break;
-            case 7:
-                robot.drive(0*feet, -2*feet, .25);
-                robot.counter++;
-                break;
-            case 8:
-                robot.drive(2*feet, 0*feet, .25);
-                robot.counter++;
-                break;
-            case 9:
-                robot.drive(0*feet, -2*feet, .25);
-                robot.counter++;
-                break;
-            case 10:
-                robot.drive(2*feet, 0*feet, .25);
-                robot.counter++;
-                break;
-            case 11:
-                robot.turn(90);
-                robot.counter++;
-                break;
+
         }
     }
 }
