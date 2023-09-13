@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 //test
-package org.firstinspires.ftc.teamcode.SensorSet;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -47,8 +47,7 @@ public class OneFootForward extends OpMode {
 //   double rev = 383.6; //435 rpm motor
     double rev = 537.7; //312 rpm motor
     double inch = rev / (3.78 * 3.14);
-    double CalebConstant = 1;
-    double feet = inch * 12 * CalebConstant;
+    double feet = inch * 12;
     short sleevenum = 1;
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -78,11 +77,10 @@ public class OneFootForward extends OpMode {
     public void loop() {
         switch (robot.counter) {
             case 0:
-                robot.drive(4*feet, 0*feet, .25);
+                robot.turn(90);
                 robot.counter++;
                 break;
             case 1:
-l
                 robot.counter++;
                 break;
 
