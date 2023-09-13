@@ -77,7 +77,10 @@ public class OneFootForward extends OpMode {
     public void loop() {
         switch (robot.counter) {
             case 0:
-                robot.turn(90);
+                for(int i = 0; i < 10; i++){
+                    robot.drive(1 * feet, 0, .25);
+                    robot.drive(-1 * feet, 0, .25);
+                }
                 robot.counter++;
                 break;
             case 1:
