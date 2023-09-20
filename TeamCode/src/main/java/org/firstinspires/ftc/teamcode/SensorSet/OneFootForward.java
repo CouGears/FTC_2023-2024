@@ -82,7 +82,6 @@ public class OneFootForward extends OpMode {
                 robot.counter++;
                 break;
             case 1:
-l
                 robot.counter++;
                 break;
 
