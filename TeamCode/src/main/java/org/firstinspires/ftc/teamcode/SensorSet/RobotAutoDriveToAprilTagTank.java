@@ -27,13 +27,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode.SensorSet;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
@@ -77,7 +78,7 @@ import java.util.concurrent.TimeUnit;
  *
  */
 
-@TeleOp(name="Tank Drive To AprilTag", group = "Concept")
+@Autonomous
 
 public class RobotAutoDriveToAprilTagTank extends LinearOpMode
 {
@@ -114,9 +115,10 @@ public class RobotAutoDriveToAprilTagTank extends LinearOpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must match the names assigned during the robot configuration.
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-
+        DcMotor motorFL = hardwareMap.get(DcMotor.class, "motorFL");
+        DcMotor motorBL  = hardwareMap.get(DcMotor.class, "motorBL");
+        DcMotor motorFR  = hardwareMap.get(DcMotor.class, "motorFR");
+        DcMotor motorFR  = hardwareMap.get(DcMotor.class, "motorBR");
         // To drive forward, most robots need the motor on one side to be reversed because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Single Gear Reduction or 90 Deg drives may require direction flips
