@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.Old_2022_2023;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -40,7 +41,7 @@ import org.firstinspires.ftc.teamcode.AutonMethods;
 
 //uncomment the following line to use
 @Autonomous
-
+@Disabled
 public class Calebs_Auton extends OpMode {
 
     //TensorFlowVision vision = new TensorFlowVision();

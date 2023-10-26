@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Old_2022_2023;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,6 +12,8 @@ import org.firstinspires.ftc.teamcode.SensorSet.LEDMethods;
 
 //TODO: Uncomment the following line to use
 @TeleOp
+@Disabled
+
 public class CompetitionDriving2023 extends LinearOpMode {
 
     public static DcMotor motorBR, motorBL, motorFL, motorFR, LiftRight, LiftLeft;

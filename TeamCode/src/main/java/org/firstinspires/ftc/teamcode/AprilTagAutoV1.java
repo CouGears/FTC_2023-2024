@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 @Autonomous
 
 
-public class AprilTagAutoV1 {
+public class AprilTagAutoV1 extends OpMode {
 
     //******************OUR VARS******************
     private static final double rev = 537.7;
@@ -40,10 +40,8 @@ public class AprilTagAutoV1 {
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
 
 
-    @Override
-
     public void init() {
-        robot.init(hardwareMap, telemetry, true);
+        robot.init(hardwareMap, telemetry, false);
         telemetry.addData("Status", "Initialized");
         initAprilTag();
         if (USE_WEBCAM) setManualExposure(6, 250);  // Use low exposure time to reduce motion blur

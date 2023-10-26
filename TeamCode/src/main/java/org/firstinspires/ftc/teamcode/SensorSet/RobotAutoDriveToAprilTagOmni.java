@@ -92,6 +92,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Autonomous
+@Disabled
 
 //WONT WORK DO NOT TRY
 public class RobotAutoDriveToAprilTagOmni extends LinearOpMode

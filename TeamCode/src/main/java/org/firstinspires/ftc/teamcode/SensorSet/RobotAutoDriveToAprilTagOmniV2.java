@@ -80,6 +80,8 @@ import java.util.concurrent.TimeUnit;
  */
 
 @TeleOp
+@Disabled
+
 public class RobotAutoDriveToAprilTagOmniV2 extends LinearOpMode
 {
 
