@@ -67,7 +67,8 @@ public class AutonMethods {
         intake.setPosition(a);
     }
 
-
+    public void initBasic(){
+    }
 
 
     public void init(HardwareMap map, Telemetry tele, boolean auton) {

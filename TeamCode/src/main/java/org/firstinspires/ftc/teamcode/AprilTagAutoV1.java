@@ -39,12 +39,12 @@ public class AprilTagAutoV1 extends OpMode {
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
 
-
     public void init() {
-        robot.init(hardwareMap, telemetry, false);
-        telemetry.addData("Status", "Initialized");
+        robot.initBasic();
         initAprilTag();
         if (USE_WEBCAM) setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
     }
 
     public void start() {
@@ -54,8 +54,13 @@ public class AprilTagAutoV1 extends OpMode {
     public void loop() {
         switch (robot.counter) {
             case 0://Finding Tag
+                int totalTurned = 0;
                 while (targetFound == false) {
                     robot.turn(10);
+                    totalTurned = totalTurned + 10;
+                    telemetry.addData("Case", "0");
+                    telemetry.addData("Ive turned", "%3 degrees", totalTurned);
+                    telemetry.update();
                     List<AprilTagDetection> currentDetections = aprilTag.getDetections();
                     for (AprilTagDetection detection : currentDetections) {
                         if ((detection.metadata != null) && ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID))) {
@@ -63,13 +68,18 @@ public class AprilTagAutoV1 extends OpMode {
                             desiredTag = detection;
                         }
                     }
+                    if (totalTurned > 360){
+                        telemetry.addData("ERROR", "No target found");
+                        telemetry.update();
+                        break;
+                    }
                 }
                 robot.counter++;
                 break;
             case 1: //Turning to tag
                 double bearingInRads =  Math.toRadians(desiredTag.ftcPose.bearing);
                 double strafeDistance = Math.cos(bearingInRads) * desiredTag.ftcPose.range;
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 4; i++) { //strafing
                     robot.drive(0, strafeDistance/4, .5);
                     robot.turn(desiredTag.ftcPose.bearing);
                 }
@@ -144,7 +154,7 @@ public class AprilTagAutoV1 extends OpMode {
             telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
             telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
         } else {
-            telemetry.addData(">","Drive using joysticks to find valid target\n");
+            telemetry.addData(">","Turning\n");
         }
     }
 }
