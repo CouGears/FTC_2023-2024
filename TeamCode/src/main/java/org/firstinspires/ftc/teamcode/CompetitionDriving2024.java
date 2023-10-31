@@ -27,7 +27,7 @@ public class CompetitionDriving2024 extends LinearOpMode {
     }
     private boolean buttonPreviousState;
     public void updatebuttonstates() {
-
+        Object[] tuple = new Object[]{1, "Hello"};
     }
     public boolean buttonClick (boolean button) {
         boolean returnVal;
