@@ -19,7 +19,22 @@ public class CompetitionDriving2024 extends LinearOpMode {
 
     public int intakemode = 0;
 
+    public void TelemetryUpdate() {
+        telemetry.addData("Drive Mode", driveswitch);
+        telemetry.addLine();
+        telemetry.addData("Intake Mode", intakemode);
+        telemetry.update();
+    }
+    private boolean buttonPreviousState;
+    public void updatebuttonstates() {
 
+    }
+    public boolean buttonClick (boolean button) {
+        boolean returnVal;
+        returnVal = button && !buttonPreviousState;
+        buttonPreviousState = button;
+        return returnVal;
+    }
     @Override
     public void runOpMode() {
         //region hardware map
@@ -52,6 +67,7 @@ public class CompetitionDriving2024 extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
+            TelemetryUpdate();
             double speed = 1;
             if (driveswitch == 0) {
                 speed = 1;
@@ -64,14 +80,14 @@ public class CompetitionDriving2024 extends LinearOpMode {
             if (gamepad1.a && driveswitch<2) {
                 driveswitch +=1;
             }
-            else if (gamepad1.b && driveswitch>-1) {
+            else if (gamepad1.b && driveswitch>0) {
                 driveswitch -=1;
             }
 
             if (gamepad1.dpad_up && intakemode<1) {
                 intakemode +=1;
             }
-            else if (gamepad1.dpad_down && driveswitch>-1) {
+            else if (gamepad1.dpad_down && intakemode>-1) {
                 intakemode -=1;
             }
 
@@ -83,7 +99,7 @@ public class CompetitionDriving2024 extends LinearOpMode {
 
 
             BackIntake.setPower(intakemode);
-            MiddleIntake.setPower(intakemode);
+            MiddleIntake.setPower(-1*intakemode);
 
             if (gamepad1.right_bumper) {
                 IntakeString.setPosition(1);
