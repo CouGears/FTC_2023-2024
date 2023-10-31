@@ -18,12 +18,7 @@ public class CompetitionDriving2024 extends LinearOpMode {
     public int driveswitch = 1;
 
     public int intakemode = 0;
-    private double botR = 1;
-    private double topR = 0;
-    private double botL = .35;
-    private double topL = 0;
-    private double right = 0;
-    private double left = 0;
+
 
     @Override
     public void runOpMode() {
