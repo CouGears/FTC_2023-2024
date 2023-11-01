@@ -31,6 +31,9 @@ public class AprilTagAutoV1 extends OpMode {
     private static final double feet = inch * 12 + (10 * inch);
     private ElapsedTime runtime = new ElapsedTime();
     AutonMethods robot = new AutonMethods();
+    HardwareMap map;
+    Telemetry tele;
+    boolean on = false;
     //******************FTC EXAMPLE VARS******************
     boolean targetFound     = false;    // Set to true when an AprilTag target is detected
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
@@ -40,7 +43,7 @@ public class AprilTagAutoV1 extends OpMode {
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
 
     public void init() {
-        robot.initBasic();
+        robot.initBasic(hardwareMap, telemetry);
         initAprilTag();
         if (USE_WEBCAM) setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
         telemetry.addData("Status", "Initialized");
@@ -52,12 +55,16 @@ public class AprilTagAutoV1 extends OpMode {
     }
 
     public void loop() {
+        on = true;
         switch (robot.counter) {
             case 0://Finding Tag
+                telemetry.addData("Step", "Case 0");
+                telemetry.update();
+                robot.sleep(5000);
                 int totalTurned = 0;
                 while (targetFound == false) {
-                    robot.turn(10);
-                    totalTurned = totalTurned + 10;
+                    robot.turn(20);
+                    totalTurned = totalTurned + 20;
                     telemetry.addData("Case", "0");
                     telemetry.addData("Ive turned", "%3 degrees", totalTurned);
                     telemetry.update();
@@ -74,20 +81,36 @@ public class AprilTagAutoV1 extends OpMode {
                         break;
                     }
                 }
+                telemetry.addData("TARGET FOUND!" , "");
+                telemetry.addData("target", desiredTag);
+                telemetry.update();
                 robot.counter++;
                 break;
             case 1: //Turning to tag
+                telemetry.addData("Step", "Case 1");
+                telemetry.update();
+                robot.sleep(1000);
                 double bearingInRads =  Math.toRadians(desiredTag.ftcPose.bearing);
                 double strafeDistance = Math.cos(bearingInRads) * desiredTag.ftcPose.range;
+                telemetry.addData("STRAFE CACULATED!" , "");
+                telemetry.addData("strafeDistance", strafeDistance);
+                telemetry.update();
+                robot.sleep(5000);
                 for (int i = 0; i < 4; i++) { //strafing
                     robot.drive(0, strafeDistance/4, .5);
                     robot.turn(desiredTag.ftcPose.bearing);
                 }
                 robot.counter++;
+
                 break;
             case 2: //
-                robot.drive( desiredTag.ftcPose.range - 12, 0,1);
+                telemetry.addData("Step", "Case 2");
+                telemetry.update();
+                robot.sleep(5000);
+                robot.drive( desiredTag.ftcPose.range - 16, 0,1);
                 robot.counter++;
+                break;
+            case 3:
                 break;
         }
     }
@@ -123,7 +146,11 @@ public class AprilTagAutoV1 extends OpMode {
         if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
             telemetry.addData("Camera", "Ready");
             telemetry.update();
+            while (on = false && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                robot.sleep(20);
+            }
         }
+
         ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
         if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
             exposureControl.setMode(ExposureControl.Mode.Manual);
