@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,7 +14,7 @@ import org.firstinspires.ftc.teamcode.SensorSet.LEDMethods;
 public class CompetitionDriving2024 extends LinearOpMode {
 
     public static DcMotor motorBR, motorBL, motorFL, motorFR, BackIntake, MiddleIntake;
-    public static Servo IntakeString;
+    public static CRServo IntakeString;
     private AutonMethods robot = new AutonMethods();
     public int driveswitch = 1;
 
@@ -23,17 +24,11 @@ public class CompetitionDriving2024 extends LinearOpMode {
         telemetry.addData("Drive Mode", driveswitch);
         telemetry.addLine();
         telemetry.addData("Intake Mode", intakemode);
+        telemetry.addLine();
+        telemetry.addData("Servo Position", IntakeString.getPower());
         telemetry.update();
-    }
-    private boolean buttonPreviousState;
-    public void updatebuttonstates() {
-        Object[] tuple = new Object[]{1, "Hello"};
-    }
-    public boolean buttonClick (boolean button) {
-        boolean returnVal;
-        returnVal = button && !buttonPreviousState;
-        buttonPreviousState = button;
-        return returnVal;
+
+        telemetry.update();
     }
     @Override
     public void runOpMode() {
@@ -46,7 +41,7 @@ public class CompetitionDriving2024 extends LinearOpMode {
         BackIntake = hardwareMap.get(DcMotor.class, "BackIntake");
         MiddleIntake = hardwareMap.get(DcMotor.class, "MiddleIntake");
 
-        IntakeString = hardwareMap.get(Servo.class, "IntakeString");
+        IntakeString = hardwareMap.get(CRServo.class, "IntakeString");
 
         motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -90,26 +85,32 @@ public class CompetitionDriving2024 extends LinearOpMode {
             else if (gamepad1.dpad_down && intakemode>-1) {
                 intakemode -=1;
             }
+            else if (gamepad1.dpad_left) {
+                intakemode = 0;
+                driveswitch = 1;
+            }
 
 
-            motorFL.setPower(((this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) + ((this.gamepad1.left_stick_y)) - (this.gamepad1.left_stick_x)) * speed);
+            motorFL.setPower(((this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) + ((this.gamepad1.left_stick_y)) - (this.gamepad1.left_stick_x)) * speed*.67);
             motorBL.setPower(-(-(this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) - (this.gamepad1.left_stick_x)) * speed);
             motorBR.setPower((-(this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed);
-            motorFR.setPower(-((this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) + (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed);
+            motorFR.setPower(-((this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) + (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed*.67);
 
 
             BackIntake.setPower(intakemode);
             MiddleIntake.setPower(-1*intakemode);
-
             if (gamepad1.right_bumper) {
-                IntakeString.setPosition(1);
-            } else if (gamepad1.left_bumper) {
-                IntakeString.setPosition(0);
+                IntakeString.setPower(1.0);
+            }
+            else if (gamepad1.left_bumper) {
+                IntakeString.setPower(0.0);
+            }
+            else {
+                IntakeString.setPower(0.5);
+            }
             }
         }
     }
-}
-
 
 
 
