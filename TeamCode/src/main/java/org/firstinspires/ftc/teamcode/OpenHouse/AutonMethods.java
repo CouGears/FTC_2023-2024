@@ -28,7 +28,7 @@ public class AutonMethods {
     private double robotWidth = 18;//inch
     private double robotLength = 19;//inch
     private double CalebTurnConstant = .9;
-    private double CalebDistanceConstant = .69;
+    private double CalebDistanceConstant = .33;
 
     private double circumscribedDiameter = Math.sqrt(Math.pow(robotLength, 2) + Math.pow(robotWidth, 2));//inch
     private double circumscribedRadius = circumscribedDiameter / 2;//inch
@@ -112,8 +112,8 @@ public class AutonMethods {
     //Function to move the robot in any direction
     public void drive(double forward, double sideways, double speed) {
         runtime.reset();
-        //forward*=CalebDistanceConstant;
-        //sideways*=CalebDistanceConstant;
+        forward*=CalebDistanceConstant;
+        sideways*=CalebDistanceConstant;
         while (motorFR.isBusy() || motorFL.isBusy()) {
             if (runtime.seconds() > 2) break;
         }
@@ -149,7 +149,7 @@ public class AutonMethods {
 
     //circumscribed robot has a diameter of 21 inches
     public void turn(double deg) {
-        //deg *= CalebTurnConstant;
+        deg *= CalebTurnConstant;
         while (motorFR.isBusy() || motorFL.isBusy()) {
             if (runtime.seconds() > 2) break;
         }

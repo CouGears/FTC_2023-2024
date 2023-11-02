@@ -33,7 +33,7 @@ public class OpenHousePuzzle extends OpMode {
 
     @Override
     public void loop() {
-        if (gamepad1.a) {
+        /*if (gamepad1.a) {
             robot.drive(3*feet, 0,.25);
             robot.drive(0, 1*feet,.25);
             robot.drive(-1*feet, 0,.25);
@@ -52,6 +52,18 @@ public class OpenHousePuzzle extends OpMode {
             robot.drive(2*feet, 0,.25);
             robot.drive(-1*feet, 0,.25);
             robot.turn(90);
+        }*/
+        if (gamepad1.a) {
+            robot.drive(2*feet, 0,.01);
+        }
+        else if (gamepad1.b) {
+            robot.drive(-2*feet, 0,.01);
+        }
+        else if (gamepad1.x) {
+            robot.turn(1);
+        }
+        else if (gamepad1.y) {
+            robot.turn(-1);
         }
     }
 }
