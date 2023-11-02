@@ -100,13 +100,13 @@ public class CompetitionDriving2024 extends LinearOpMode {
             BackIntake.setPower(intakemode);
             MiddleIntake.setPower(-1*intakemode);
             if (gamepad1.right_bumper) {
-                IntakeString.setPower(1.0);
+                IntakeString.setPower(0.5);
             }
             else if (gamepad1.left_bumper) {
-                IntakeString.setPower(0.0);
+                IntakeString.setPower(-0.5);
             }
             else {
-                IntakeString.setPower(0.5);
+                IntakeString.setPower(0.0);
             }
             }
         }
