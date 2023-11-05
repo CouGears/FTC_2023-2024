@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -27,13 +28,13 @@ public class AutonMethods {
     private double wheelDiameter = 4;//inch
     private double robotWidth = 18;//inch
     private double robotLength = 19;//inch
-    private double CalebTurnConstant = .9;
-    private double CalebDistanceConstant = .33;
+    private double CalebTurnConstant = .855;
+    private double CalebDistanceConstant = .75;
 
     private double circumscribedDiameter = Math.sqrt(Math.pow(robotLength, 2) + Math.pow(robotWidth, 2));//inch
     private double circumscribedRadius = circumscribedDiameter / 2;//inch
     private double inch = rev / (wheelDiameter * pi);
-    private double feet = inch * 12;
+    public double feet = inch * 12;
     private double rev2 = 2048;//revolution of 435 rpm motor
     private double inch2 = rev2 / (2 * pi);
     private double feet2 = inch2 * 12;
@@ -105,6 +106,13 @@ public class AutonMethods {
 
     }
 
+    public void teleOpDrive(Gamepad gamepad1){
+        motorFL.setPower(((gamepad1.right_stick_y) - (gamepad1.right_stick_x) + ((gamepad1.left_stick_y)) - (gamepad1.left_stick_x)));
+        motorFR.setPower(-((gamepad1.right_stick_y) + (gamepad1.right_stick_x) + (gamepad1.left_stick_y) + (gamepad1.left_stick_x)));
+        motorBL.setPower(-(-(gamepad1.right_stick_y) + (gamepad1.right_stick_x) - (gamepad1.left_stick_y) - (gamepad1.left_stick_x)));
+        motorBR.setPower((-(gamepad1.right_stick_y) - (gamepad1.right_stick_x) - (gamepad1.left_stick_y) + (gamepad1.left_stick_x)));
+    }
+
     public double maps(double x, double in_min, double in_max, double out_min, double out_max) {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
@@ -148,7 +156,7 @@ public class AutonMethods {
 
 
     //circumscribed robot has a diameter of 21 inches
-    public void turn(double deg) {
+    public void turn(double deg, double speed) {
         deg *= CalebTurnConstant;
         while (motorFR.isBusy() || motorFL.isBusy()) {
             if (runtime.seconds() > 2) break;
@@ -166,10 +174,10 @@ public class AutonMethods {
         motorBR.setMode(RunMode.RUN_TO_POSITION);
         motorFL.setMode(RunMode.RUN_TO_POSITION);
         motorBL.setMode(RunMode.RUN_TO_POSITION);
-        motorFL.setPower(0.5);
-        motorBL.setPower(0.5);
-        motorFR.setPower(0.5);
-        motorBR.setPower(0.5);
+        motorFL.setPower(speed);
+        motorBL.setPower(speed);
+        motorFR.setPower(speed);
+        motorBR.setPower(speed);
 
     }
 

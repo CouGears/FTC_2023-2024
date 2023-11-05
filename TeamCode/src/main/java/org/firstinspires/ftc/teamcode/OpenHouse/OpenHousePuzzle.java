@@ -54,16 +54,24 @@ public class OpenHousePuzzle extends OpMode {
             robot.turn(90);
         }*/
         if (gamepad1.a) {
-            robot.drive(2*feet, 0,.01);
+            robot.drive(2*feet, 0,.2);
+            robot.newSleep(.75);
+            robot.speed(0);
         }
         else if (gamepad1.b) {
-            robot.drive(-2*feet, 0,.01);
+            robot.drive(-2*feet, 0,.2);
+            robot.newSleep(.75);
+            robot.speed(0);
         }
         else if (gamepad1.x) {
-            robot.turn(1);
+            robot.turn(20, .2);
+            robot.newSleep(.75);
+            robot.speed(0);
         }
         else if (gamepad1.y) {
-            robot.turn(-1);
+            robot.turn(-20, .2);
+            robot.newSleep(.75);
+            robot.speed(0);
         }
     }
 }
