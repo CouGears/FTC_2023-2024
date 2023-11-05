@@ -28,8 +28,8 @@ public class AutonMethods {
     private double wheelDiameter = 4;//inch
     private double robotWidth = 18;//inch
     private double robotLength = 19;//inch
-    private double CalebTurnConstant = .855;
-    private double CalebDistanceConstant = .75;
+    private double CalebTurnConstant = .8565;
+    private double CalebDistanceConstant = .725;
 
     private double circumscribedDiameter = Math.sqrt(Math.pow(robotLength, 2) + Math.pow(robotWidth, 2));//inch
     private double circumscribedRadius = circumscribedDiameter / 2;//inch

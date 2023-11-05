@@ -93,11 +93,9 @@ public class OpenHousePuzzle3 extends LinearOpMode {
                     break;
 
                 default:
-                    // If we're not in a sequence, allow manual control
-                    robot.teleOpDrive(gamepad1);
                     break;
             }
-
+            sleep(3000);
             telemetry.update();
         }
     }
