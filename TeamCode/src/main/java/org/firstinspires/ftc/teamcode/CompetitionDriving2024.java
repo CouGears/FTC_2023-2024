@@ -19,6 +19,7 @@ public class CompetitionDriving2024 extends LinearOpMode {
     public int driveswitch = 1;
 
     public int intakemode = 0;
+    private int liftLimit = 5500;
 
     public void TelemetryUpdate() {
         telemetry.addData("Drive Mode", driveswitch);
@@ -38,13 +39,10 @@ public class CompetitionDriving2024 extends LinearOpMode {
         motorBL = hardwareMap.get(DcMotor.class, "motorBL");
         motorBR = hardwareMap.get(DcMotor.class, "motorBR");
         motorFR = hardwareMap.get(DcMotor.class, "motorFR");
-        Lift = hardwareMap.get(DcMotor.class, "Lift");
         BackIntake = hardwareMap.get(DcMotor.class, "BackIntake");
         MiddleIntake = hardwareMap.get(DcMotor.class, "MiddleIntake");
 
         IntakeString = hardwareMap.get(CRServo.class, "IntakeString");
-
-        Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -52,15 +50,18 @@ public class CompetitionDriving2024 extends LinearOpMode {
         motorBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         MiddleIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         motorFL.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBL.setDirection(DcMotorSimple.Direction.FORWARD);
         motorFR.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBR.setDirection(DcMotorSimple.Direction.FORWARD);
-        Lift.setDirection(DcMotorSimple.Direction.FORWARD);
         BackIntake.setDirection(DcMotorSimple.Direction.REVERSE);
         MiddleIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        Lift = hardwareMap.get(DcMotor.class, "Lift");
+        Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -96,10 +97,10 @@ public class CompetitionDriving2024 extends LinearOpMode {
             }
 
 
-            motorFL.setPower(((this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) + ((this.gamepad1.left_stick_y)) - (this.gamepad1.left_stick_x)) * speed);
+            motorFL.setPower(((this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) + ((this.gamepad1.left_stick_y)) - (this.gamepad1.left_stick_x)) * speed*.67);
             motorBL.setPower(-(-(this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) - (this.gamepad1.left_stick_x)) * speed);
             motorBR.setPower((-(this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed);
-            motorFR.setPower(-((this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) + (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed);
+            motorFR.setPower(-((this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) + (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed*.67);
 
 
             BackIntake.setPower(intakemode);
@@ -113,6 +114,18 @@ public class CompetitionDriving2024 extends LinearOpMode {
             else {
                 IntakeString.setPower(0.0);
             }
+
+            //LIFT
+            if (gamepad1.dpad_up && Lift.getCurrentPosition() <= liftLimit) {
+                Lift.setPower(1);
+            } else if (gamepad1.dpad_down && Lift.getCurrentPosition() >= 500){ //At 500 b/c motor will overspin w/ momentum and end up <0
+                Lift.setPower(-1);
+            } else {
+                Lift.setPower(0);
+            }
+
+            telemetry.addData("Lift Pos = ", Lift.getCurrentPosition());
+            telemetry.update();
             }
         }
     }
