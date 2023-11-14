@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Old_2022_2023;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
@@ -12,8 +13,12 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+@Disabled
 public class AutonMethods {
 
     //Constructor
@@ -41,7 +46,7 @@ public class AutonMethods {
     private double botL = .35;
     private double topL = 0;
     private double FRtpos, BRtpos, FLtpos, BLtpos;
-    public static DcMotor motorBR, motorBL, motorFL, motorFR, LiftRight, LiftLeft;
+    public static DcMotor motorBR, motorBL, motorFL, motorFR;
     //public static DcMotor Forwards = intake, Sideways = carousel;
     public static Servo intake, armL, armR;
     public static DistanceSensor distanceSensor, distanceSensorBack;
@@ -62,55 +67,33 @@ public class AutonMethods {
         intake.setPosition(a);
     }
 
+    public void initBasic(){
+    }
+
 
     public void init(HardwareMap map, Telemetry tele, boolean auton) {
         motorFL = map.get(DcMotor.class, "motorFL");
         motorBL = map.get(DcMotor.class, "motorBL");
         motorBR = map.get(DcMotor.class, "motorBR");
         motorFR = map.get(DcMotor.class, "motorFR");
-        LiftRight = map.get(DcMotor.class, "LiftRight");
-        LiftLeft = map.get(DcMotor.class, "LiftLeft");
-        // release = map.get(DcMotor.class, "release");
-
-       /* red = map.get(LED.class, "red");
-        green = map.get(LED.class, "green");
-        red2 = map.get(LED.class, "red2");
-        green2 = map.get(LED.class, "green2");*/
-
-        intake = map.get(Servo.class, "intake");
 
 
         motorFL.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorBL.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorFR.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorBR.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-        LiftLeft.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-        LiftRight.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-
-        //  release.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         motorFL.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
         motorFR.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBR.setDirection(DcMotorSimple.Direction.FORWARD);
-        LiftLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        LiftRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        // release.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        LiftLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        LiftRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         motorFL.setTargetPosition(0);
         motorBL.setTargetPosition(0);
         motorFR.setTargetPosition(0);
         motorBR.setTargetPosition(0);
-        LiftLeft.setTargetPosition(0);
-        LiftRight.setTargetPosition(0);
 
-        int relativeLayoutId = map.appContext.getResources().getIdentifier("RelativeLayout", "id", map.appContext.getPackageName());
-
-         tele.addData(">", "Gyro Calibrating. Do Not Move!");
+         tele.addData(">", "Init DONE");
         tele.update();
     }
 
@@ -119,8 +102,8 @@ public class AutonMethods {
         motorBL.setPower(0);
         motorBR.setPower(0);
         motorFR.setPower(0);
-        LiftLeft.setPower(0);
-        LiftRight.setPower(0);
+//        LiftLeft.setPower(0);
+//        LiftRight.setPower(0);
 
     }
 
@@ -156,6 +139,7 @@ public class AutonMethods {
 
         speed(speed);
     }
+
     public void speed(double spee) {
         motorFL.setPower(spee);
         motorBL.setPower(spee);
@@ -188,7 +172,7 @@ public class AutonMethods {
         motorBR.setPower(0.5);
 
     }
-
+/*
     public void LiftSetPosition(int position) {
         LiftLeft.setTargetPosition(position);
         LiftRight.setTargetPosition(position);
@@ -213,7 +197,7 @@ public class AutonMethods {
         int leftPosition = LiftLeft.getCurrentPosition();
         return (leftPosition);
     }
-
+*/
 //
 
     public void newSleep(double timeinSeconds) {
@@ -231,6 +215,8 @@ public class AutonMethods {
             tele.update();
         }
     }
+}
+    /*
     public void lift(double amount) { //moves the 4 bar/lifter
         // amount = -amount;
         LiftRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
@@ -245,3 +231,59 @@ public class AutonMethods {
         intake.setPosition(-.25);
     }
 }
+
+
+
+/* ***************EXAMPLE APRILTAG FUNCTIONS***************
+private void initAprilTag() {
+    // Create the AprilTag processor by using a builder.
+    aprilTag = new AprilTagProcessor.Builder().build();
+
+    // Create the vision portal by using a builder.
+    if (USE_WEBCAM) {
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .addProcessor(aprilTag)
+                .build();
+    } else {
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(BuiltinCameraDirection.BACK)
+                .addProcessor(aprilTag)
+                .build();
+    }
+}
+
+    private void    setManualExposure(int exposureMS, int gain) {
+        // Wait for the camera to be open, then use the controls
+
+        if (visionPortal == null) {
+            return;
+        }
+
+        // Make sure camera is streaming before we try to set the exposure controls
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                sleep(20);
+            }
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
+        }
+
+        // Set camera controls unless we are stopping.
+        if (!isStopRequested())
+        {
+            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                exposureControl.setMode(ExposureControl.Mode.Manual);
+                sleep(50);
+            }
+            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+            sleep(20);
+            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+            gainControl.setGain(gain);
+            sleep(20);
+        }
+    }
+ */

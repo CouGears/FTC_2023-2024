@@ -54,7 +54,7 @@ public class AutonMethods{
     public static int Case = 0;
     HardwareMap map;
     Telemetry tele;
-    public static int counter = 0;
+    public int counter = 0;
 
     public static BNO055IMU imu;
     BNO055IMU.Parameters parameters;
@@ -65,7 +65,27 @@ public class AutonMethods{
         intake.setPosition(a);
     }
 
+    public void initBasic(HardwareMap map, Telemetry tele) {
+        motorFL = map.get(DcMotor.class, "motorFL");
+        motorBL = map.get(DcMotor.class, "motorBL");
+        motorBR = map.get(DcMotor.class, "motorBR");
+        motorFR = map.get(DcMotor.class, "motorFR");
 
+        motorFL.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+        motorBL.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+        motorFR.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+        motorBR.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+
+        motorFL.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFR.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBR.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        motorFL.setTargetPosition(0);
+        motorBL.setTargetPosition(0);
+        motorFR.setTargetPosition(0);
+        motorBR.setTargetPosition(0);
+    }
     public void init(HardwareMap map, Telemetry tele, boolean auton) {
         motorFL = map.get(DcMotor.class, "motorFL");
         motorBL = map.get(DcMotor.class, "motorBL");
@@ -250,4 +270,6 @@ public class AutonMethods{
     {
         intake.setPosition(-.25);
     }
+
+
 }
