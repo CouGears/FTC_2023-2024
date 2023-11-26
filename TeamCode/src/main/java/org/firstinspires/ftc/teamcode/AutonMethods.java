@@ -47,14 +47,11 @@ public class AutonMethods{
     public static DcMotor motorBR, motorBL, motorFL, motorFR, LiftRight, LiftLeft;
     //public static DcMotor Forwards = intake, Sideways = carousel;
     public static Servo intake, armL, armR;
-    public static DistanceSensor distanceSensor, distanceSensorBack;
-    // public static LED red, green, red2, green2;
-    public TouchSensor armTouch;
     private final ElapsedTime runtime = new ElapsedTime();
     public static int Case = 0;
     HardwareMap map;
     Telemetry tele;
-    public static int counter = 0;
+    public int counter = 0;
 
     public static BNO055IMU imu;
     BNO055IMU.Parameters parameters;
@@ -65,7 +62,27 @@ public class AutonMethods{
         intake.setPosition(a);
     }
 
+    public void initBasic(HardwareMap map, Telemetry tele) {
+        motorFL = map.get(DcMotor.class, "motorFL");
+        motorBL = map.get(DcMotor.class, "motorBL");
+        motorBR = map.get(DcMotor.class, "motorBR");
+        motorFR = map.get(DcMotor.class, "motorFR");
 
+        motorFL.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+        motorBL.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+        motorFR.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+        motorBR.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+
+        motorFL.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFR.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBR.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        motorFL.setTargetPosition(0);
+        motorBL.setTargetPosition(0);
+        motorFR.setTargetPosition(0);
+        motorBR.setTargetPosition(0);
+    }
     public void init(HardwareMap map, Telemetry tele, boolean auton) {
         motorFL = map.get(DcMotor.class, "motorFL");
         motorBL = map.get(DcMotor.class, "motorBL");
@@ -161,11 +178,12 @@ public class AutonMethods{
 
         speed(speed);
     }
-    public void speed(double spee) {
-        motorFL.setPower(spee);
-        motorBL.setPower(spee);
-        motorFR.setPower(spee);
-        motorBR.setPower(spee);
+
+    public void speed(double speed) {
+        motorFL.setPower(speed);
+        motorBL.setPower(speed);
+        motorFR.setPower(speed);
+        motorBR.setPower(speed);
     }
 
 
@@ -195,14 +213,7 @@ public class AutonMethods{
 
     }
 
-    public void LiftSetPosition(int position) {
-        LiftLeft.setTargetPosition(position);
-        LiftRight.setTargetPosition(position);
-        LiftRight.setMode(RunMode.RUN_TO_POSITION);
-        LiftLeft.setMode(RunMode.RUN_TO_POSITION);
-        LiftLeft.setPower(1);
-        LiftRight.setPower(1);
-    }
+
     public void LiftArmSetPosition(int position) {
         LiftLeft.setTargetPosition(position);
         LiftRight.setTargetPosition(position);
@@ -215,18 +226,10 @@ public class AutonMethods{
         armL.setPosition(left);
         armR.setPosition(right);
     }
-    public int LiftGetPosition() {
-        int leftPosition = LiftLeft.getCurrentPosition();
-        return (leftPosition);
-    }
+
 
 //
 
-    public void newSleep(double timeinSeconds) {
-        runtime.reset();
-        while (runtime.seconds() < timeinSeconds) ;
-//do nothing
-    }
 
     //Function to have the robot sleep
     public void sleep(long sleep) {
@@ -237,17 +240,6 @@ public class AutonMethods{
             tele.update();
         }
     }
-    public void lift(double amount) { //moves the 4 bar/lifter
-        // amount = -amount;
-        LiftRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        LiftLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        LiftRight.setTargetPosition((int) amount);
-        LiftLeft.setMode(RunMode.RUN_TO_POSITION);
-        LiftRight.setPower(.6);
-        LiftLeft.setPower(.6);
-    }
-    public void dump()
-    {
-        intake.setPosition(-.25);
-    }
+
+
 }

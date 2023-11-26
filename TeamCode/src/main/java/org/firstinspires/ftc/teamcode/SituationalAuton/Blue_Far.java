@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 //test
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.SituationalAuton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -39,17 +39,15 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.AutonMethods;
 
 
-//uncomment the following line to use
 @Autonomous
 @Disabled
-
-public class OneFootForward extends OpMode {
+public class Blue_Far extends OpMode {
 
     //TensorFlowVision vision = new TensorFlowVision();
 //   double rev = 383.6; //435 rpm motor
     double rev = 537.7; //312 rpm motor
     double inch = rev / (3.78 * 3.14);
-    double feet = inch * 12;
+    double feet = inch * 12 + (10 * inch);
     short sleevenum = 1;
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -58,17 +56,13 @@ public class OneFootForward extends OpMode {
     Telemetry tele;
 
     @Override
+
     public void init() {
 
         robot.init(hardwareMap, telemetry, false);
 
         telemetry.addData("Status", "Initialized");
 
-    }
-
-
-    public void init_loop() {
-        //robot.clawsetpos(0);
     }
 
     public void start() {
@@ -79,16 +73,12 @@ public class OneFootForward extends OpMode {
     public void loop() {
         switch (robot.counter) {
             case 0:
-                for(int i = 0; i < 10; i++){
-                    robot.drive(1 * feet, 0, .25);
-                    robot.drive(-1 * feet, 0, .25);
-                }
+                robot.turn(-90);
                 robot.counter++;
                 break;
             case 1:
-                robot.counter++;
+                robot.drive(6 * feet, 0,.25);
                 break;
-
         }
     }
 }

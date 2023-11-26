@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -37,9 +38,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
-//uncomment the following line to use
-@Autonomous
 
+@Autonomous
+@Disabled
 public class Eliezers_Auton extends OpMode {
 
     //TensorFlowVision vision = new TensorFlowVision();
@@ -55,6 +56,7 @@ public class Eliezers_Auton extends OpMode {
     Telemetry tele;
 
     @Override
+
     public void init() {
 
         robot.init(hardwareMap, telemetry, false);
