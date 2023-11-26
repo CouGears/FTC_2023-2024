@@ -84,6 +84,13 @@ public class CompetitionDriving2024 extends LinearOpMode {
             } else if (driveswitch == 2) {
                 speed = .333;
             }
+            if (gamepad1.dpad_left) {
+                DropServo.setPosition(.3);
+            }
+            else{
+                DropServo.setPosition(0);
+            }
+
 
             if (gamepad1.a && driveswitch<2) {
                 driveswitch +=1;
@@ -92,26 +99,25 @@ public class CompetitionDriving2024 extends LinearOpMode {
                 driveswitch -=1;
             }
 
-            if (gamepad1.right_bumper && intakemode<1) {
-                intakemode +=1;
+            if (gamepad1.right_bumper) {
+                BackIntake.setPower(1);
             }
-            else if (gamepad1.left_bumper && intakemode>-1) {
-                intakemode -=1;
+            else{
+                BackIntake.setPower(0);
             }
-            if (gamepad1.x) {
-                intakemode = 0;
-                driveswitch = 1;
+            if (gamepad1.left_bumper) {
+                MiddleIntake.setPower(-1);
+            }
+            else{
+                MiddleIntake.setPower(0);
             }
 
 
             motorFL.setPower(((this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) + ((this.gamepad1.left_stick_y)) - (this.gamepad1.left_stick_x)) * speed);
-            motorBL.setPower(-(-(this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) - (this.gamepad1.left_stick_x)) * speed*.5);
-            motorBR.setPower((-(this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed*.5);
+            motorBL.setPower(-(-(this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) - (this.gamepad1.left_stick_x)) * speed*.7);
+            motorBR.setPower((-(this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed*.7);
             motorFR.setPower(-((this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) + (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed);
 
-
-            BackIntake.setPower(intakemode);
-            MiddleIntake.setPower(-1*intakemode);
             if (gamepad1.right_trigger>.1) {
                 IntakeString.setPower(gamepad1.right_trigger);
             }
@@ -129,12 +135,6 @@ public class CompetitionDriving2024 extends LinearOpMode {
                 Lift.setPower(-1);
             } else {
                 Lift.setPower(0);
-            }
-            if (gamepad1.dpad_left) {
-                DropServo.setPosition(.3);
-            }
-            else{
-                DropServo.setPosition(0);
             }
 
             }
