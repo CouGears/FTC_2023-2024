@@ -47,9 +47,6 @@ public class AutonMethods{
     public static DcMotor motorBR, motorBL, motorFL, motorFR, LiftRight, LiftLeft;
     //public static DcMotor Forwards = intake, Sideways = carousel;
     public static Servo intake, armL, armR;
-    public static DistanceSensor distanceSensor, distanceSensorBack;
-    // public static LED red, green, red2, green2;
-    public TouchSensor armTouch;
     private final ElapsedTime runtime = new ElapsedTime();
     public static int Case = 0;
     HardwareMap map;
@@ -181,11 +178,12 @@ public class AutonMethods{
 
         speed(speed);
     }
-    public void speed(double spee) {
-        motorFL.setPower(spee);
-        motorBL.setPower(spee);
-        motorFR.setPower(spee);
-        motorBR.setPower(spee);
+
+    public void speed(double speed) {
+        motorFL.setPower(speed);
+        motorBL.setPower(speed);
+        motorFR.setPower(speed);
+        motorBR.setPower(speed);
     }
 
 
@@ -215,14 +213,7 @@ public class AutonMethods{
 
     }
 
-    public void LiftSetPosition(int position) {
-        LiftLeft.setTargetPosition(position);
-        LiftRight.setTargetPosition(position);
-        LiftRight.setMode(RunMode.RUN_TO_POSITION);
-        LiftLeft.setMode(RunMode.RUN_TO_POSITION);
-        LiftLeft.setPower(1);
-        LiftRight.setPower(1);
-    }
+
     public void LiftArmSetPosition(int position) {
         LiftLeft.setTargetPosition(position);
         LiftRight.setTargetPosition(position);
@@ -235,18 +226,10 @@ public class AutonMethods{
         armL.setPosition(left);
         armR.setPosition(right);
     }
-    public int LiftGetPosition() {
-        int leftPosition = LiftLeft.getCurrentPosition();
-        return (leftPosition);
-    }
+
 
 //
 
-    public void newSleep(double timeinSeconds) {
-        runtime.reset();
-        while (runtime.seconds() < timeinSeconds) ;
-//do nothing
-    }
 
     //Function to have the robot sleep
     public void sleep(long sleep) {
@@ -256,19 +239,6 @@ public class AutonMethods{
             tele.addLine("Failed Sleep");
             tele.update();
         }
-    }
-    public void lift(double amount) { //moves the 4 bar/lifter
-        // amount = -amount;
-        LiftRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        LiftLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        LiftRight.setTargetPosition((int) amount);
-        LiftLeft.setMode(RunMode.RUN_TO_POSITION);
-        LiftRight.setPower(.6);
-        LiftLeft.setPower(.6);
-    }
-    public void dump()
-    {
-        intake.setPosition(-.25);
     }
 
 

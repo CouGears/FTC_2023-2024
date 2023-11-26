@@ -58,9 +58,10 @@ public class AprilTagAutoV1 extends OpMode {
         on = true;
         switch (robot.counter) {
             case 0://Finding Tag
+
                 telemetry.addData("Step", "Case 0");
                 telemetry.update();
-                robot.sleep(5000);
+
                 int totalTurned = 0;
                 while (targetFound == false) {
                     robot.turn(20);
