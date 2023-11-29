@@ -27,14 +27,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.SensorSet;
+package org.firstinspires.ftc.teamcode.camera;
 
+import static org.firstinspires.ftc.teamcode.AutonMethods.motorBL;
+import static org.firstinspires.ftc.teamcode.AutonMethods.motorBR;
+import static org.firstinspires.ftc.teamcode.AutonMethods.motorFL;
+import static org.firstinspires.ftc.teamcode.AutonMethods.motorFR;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.AutonMethods;
+import org.firstinspires.ftc.teamcode.SensorSet.AutonMethodsNew;
+import static org.firstinspires.ftc.teamcode.AutonMethods.motorBL;
+import static org.firstinspires.ftc.teamcode.AutonMethods.motorBR;
+import static org.firstinspires.ftc.teamcode.AutonMethods.motorFL;
+import static org.firstinspires.ftc.teamcode.AutonMethods.motorFR;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
@@ -45,7 +58,6 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 /*
  * This OpMode illustrates using a camera to locate and drive towards a specific AprilTag.
  * The code assumes a Holonomic (Mecanum or X Drive) Robot.
@@ -79,13 +91,16 @@ import java.util.concurrent.TimeUnit;
  *
  */
 
-@TeleOp
+@Autonomous
 @Disabled
 
-public class RobotAutoDriveToAprilTagOmniV2 extends LinearOpMode
+//******************WONT WORK DO NOT TRY******************
+public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
 {
-
-
+    private AutonMethods robot = new AutonMethods();
+    double rev = 537.7; //312 rpm motor
+    double inch = rev / (3.78 * 3.14);
+    double feet = inch * 12 + (10 * inch);
     // Adjust these numbers to suit your robot.
     final double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
 
@@ -124,14 +139,23 @@ public class RobotAutoDriveToAprilTagOmniV2 extends LinearOpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must match the names assigned during the robot configuration.
         // step (using the FTC Robot Controller app on the phone).
-
+        motorFL  = hardwareMap.get(DcMotor.class, "motorFL");
+        motorBL  = hardwareMap.get(DcMotor.class, "motorBL");
+        motorFR  = hardwareMap.get(DcMotor.class, "motorFR");
+        motorBR  = hardwareMap.get(DcMotor.class, "motorBR");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
+        motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
-
+        motorFL.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBL.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorFR.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBR.setDirection(DcMotorSimple.Direction.FORWARD);
 
         if (USE_WEBCAM)
             setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
@@ -173,30 +197,46 @@ public class RobotAutoDriveToAprilTagOmniV2 extends LinearOpMode
 
             // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
             if (gamepad1.left_bumper && targetFound) {
+//
+//                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+//                double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
+//                double  headingError    = desiredTag.ftcPose.bearing;
+//                double  yawError        = desiredTag.ftcPose.yaw;
+//
+//                // Use the speed and turn "gains" to calculate how we want the robot to move.
+//                drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+//                turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
+//                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+                  robot.turn(desiredTag.ftcPose.bearing);
+                  robot.kill();
+                  if (desiredTag.ftcPose.bearing < 12) {
+                      if (desiredTag.ftcPose.bearing < 15 && desiredTag.ftcPose.bearing > -15){
+                          robot.kill();
+                          robot.drive(6 * inch, 0, .75);
+                          robot.kill();
+                      } else {
+                          robot.turn(desiredTag.ftcPose.bearing);
+                          robot.kill();
+                          robot.drive(6 * inch, 0, .75);
+                          robot.kill();
+                      }
+                  }
 
-                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-                double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-                double  headingError    = desiredTag.ftcPose.bearing;
-                double  yawError        = desiredTag.ftcPose.yaw;
-
-                // Use the speed and turn "gains" to calculate how we want the robot to move.
-                drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-                turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
-                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
                 telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
             } else {
-
-                // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
-                drive  = -gamepad1.left_stick_y  / 2.0;  // Reduce drive rate to 50%.
-                strafe = -gamepad1.left_stick_x  / 2.0;  // Reduce strafe rate to 50%.
-                turn   = -gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
+                int speed = 1;
+                motorFL.setPower(((this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) + ((this.gamepad1.left_stick_y)) - (this.gamepad1.left_stick_x)) * speed);
+                motorFR.setPower(-((this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) + (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed);
+                motorBL.setPower(-(-(this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) - (this.gamepad1.left_stick_x)) * speed);
+                motorBR.setPower((-(this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed);
                 telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+
             }
             telemetry.update();
 
             // Apply desired axes motions to the drivetrain.
-            moveRobot(drive, strafe, turn);
+//            moveRobot(drive, strafe, turn);
             sleep(10);
         }
     }
@@ -230,10 +270,10 @@ public class RobotAutoDriveToAprilTagOmniV2 extends LinearOpMode
         }
 
         // Send powers to the wheels.
-        leftFrontDrive.setPower(leftFrontPower);
-        rightFrontDrive.setPower(rightFrontPower);
-        leftBackDrive.setPower(leftBackPower);
-        rightBackDrive.setPower(rightBackPower);
+        motorFL.setPower(leftFrontPower);
+        motorFR.setPower(rightFrontPower);
+        motorBL.setPower(leftBackPower);
+        motorBR.setPower(rightBackPower);
     }
 
     /**
@@ -261,7 +301,7 @@ public class RobotAutoDriveToAprilTagOmniV2 extends LinearOpMode
      Manually set the camera gain and exposure.
      This can only be called AFTER calling initAprilTag(), and only works for Webcams;
     */
-    private void    setManualExposure(int exposureMS, int gain) {
+    private void setManualExposure(int exposureMS, int gain) {
         // Wait for the camera to be open, then use the controls
 
         if (visionPortal == null) {

@@ -56,7 +56,6 @@ public class Blue_Far extends OpMode {
     Telemetry tele;
 
     @Override
-
     public void init() {
 
         robot.init(hardwareMap, telemetry, false);

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpenHouse;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.SensorSet.LEDMethods;
 
 //TODO: Uncomment the following line to use
 @TeleOp
+@Disabled
 public class OpenHousePuzzle extends OpMode {
 
     private AutonMethods robot = new AutonMethods();

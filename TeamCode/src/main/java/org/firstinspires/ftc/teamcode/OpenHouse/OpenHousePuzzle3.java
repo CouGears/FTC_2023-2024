@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.OpenHouse;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp
+@Disabled
 public class OpenHousePuzzle3 extends LinearOpMode {
 
     private AutonMethods robot = new AutonMethods();

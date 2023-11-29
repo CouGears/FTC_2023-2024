@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.Components;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
-
+@Disabled
 //@TeleOp
 public class MagneticandLimitSwitch extends LinearOpMode {
     // Define variables for our touch sensor and motor
