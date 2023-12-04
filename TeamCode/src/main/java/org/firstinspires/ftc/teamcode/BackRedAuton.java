@@ -31,16 +31,15 @@ package org.firstinspires.ftc.teamcode;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
+//This auton is for Red Board Side
 
 @Autonomous
-public class Auton2024 extends OpMode {
+public class BackRedAuton extends OpMode {
 
     //TensorFlowVision vision = new TensorFlowVision();
 //   double rev = 383.6; //435 rpm motor
@@ -81,50 +80,112 @@ public class Auton2024 extends OpMode {
     public void loop() {
         switch (robot.counter) {
             case 0:
-                robot.drive(0*feet, -.75*feet, .25);
+                robot.DropSetPosition(.045);
                 robot.counter++;
                 break;
-
             case 1:
-                robot.turn(-270);
+                robot.drive(0, -4*inch, .5);
                 robot.counter++;
                 break;
             case 2:
-                backdistance = robot.GetLeftDistance();
+                robot.drive(2*feet, 0, .5);
                 robot.counter++;
                 break;
+
             case 3:
-                robot.turn(270);
+                robot.drive(0, -2*feet, .5);
                 robot.counter++;
                 break;
             case 4:
-                middledistance = robot.GetLeftDistance();
+                robot.drive(4*feet, 0, .5);
                 robot.counter++;
                 break;
             case 5:
-                robot.turn(270);
+                //eliezer fancy shmancy code
                 robot.counter++;
                 break;
             case 6:
-                frontdistance = robot.GetLeftDistance();
+                robot.LiftSetPosition(50);//idk ill have to like do some fancy shmancy stuff to see if this is right
                 robot.counter++;
                 break;
             case 7:
-                // Print all three distances
-                telemetry.addData("Front Distance", frontdistance);
-                telemetry.addData("Middle Distance", middledistance);
-                telemetry.addData("Back Distance", backdistance);
-
-                // Determine the smallest distance
-                double minDistance = Math.min(Math.min(frontdistance, middledistance), backdistance);
-                String closestPosition = (minDistance == frontdistance) ? "Front" :
-                        (minDistance == middledistance) ? "Middle" : "Back";
-
-                // Print the closest position with its distance
-                telemetry.addData("Closest Distance", closestPosition + ": " + minDistance);
-                telemetry.update();
+                robot.DropSetPosition(.3);
                 robot.counter++;
                 break;
+            case 8:
+                robot.sleep(1000);
+                robot.counter++;
+                break;
+            case 9:
+                robot.DropSetPosition(.045);
+                robot.counter++;
+                break;
+            case 10:
+                robot.LiftSetPosition(0);
+                robot.counter++;
+                break;
+            case 11:
+                robot.MiddleIntakeSpeed(1);
+                robot.counter++;
+                break;
+            case 12:
+                robot.sleep(1000);
+                robot.counter++;
+                break;
+            case 13:
+                robot.MiddleIntakeSpeed(0);
+                robot.counter++;
+                break;
+            case 14:
+                robot.LiftSetPosition(50);//idk ill have to like do some fancy shmancy stuff to see if this is right
+                robot.counter++;
+                break;
+            case 15:
+                robot.DropSetPosition(.3);
+                robot.counter++;
+                break;
+            case 16:
+                robot.sleep(1000);
+                robot.counter++;
+                break;
+            case 17:
+                robot.DropSetPosition(.045);
+                robot.counter++;
+                break;
+            case 18:
+                robot.LiftSetPosition(0);
+                robot.counter++;
+                break;
+            case 19:
+                robot.drive(0, 2*feet, .5);
+                robot.counter++;
+                break;
+            case 20:
+                robot.drive(1*feet, 0, .5);
+                robot.counter++;
+                break;
+            case 21:
+                robot.IntakeString(1);
+                robot.counter++;
+                break;
+            case 22:
+                robot.sleep(1000);
+                robot.counter++;
+                break;
+            case 23:
+                robot.IntakeString(1);
+                robot.counter++;
+                break;
+            case 24:
+                robot.sleep(1000);
+                robot.counter++;
+                break;
+            case 25:
+                robot.IntakeString(0);
+                robot.counter++;
+                break;
+
+
 
         }
     }

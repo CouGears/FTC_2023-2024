@@ -28,15 +28,17 @@ public class AutonMethods{
     private double rev = 537.7;//revolution of 312 rpm motor , find at https://www.gobilda.com/5202-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-6mm-d-shaft-312-rpm-36mm-gearbox-3-3-5v-encoder/  called encoder resolution
     private double pi = 3.14;
     private double wheelDiameter = 3.77953;//inch
-    private double robotWidth = 12.75;//inch
-    private double robotLength = 13;//inch
+    private double robotWidth = 14;//inch
+    private double robotLength = 17;//inch
     private double CalebTurnConstant = .9;
-    private double CalebDistanceConstant = .69;
+    private double CalebDistanceConstant = 2;
+    private double CalebSideConstant = CalebDistanceConstant*1.371;
+
 
     private double circumscribedDiameter = Math.sqrt(Math.pow(robotLength, 2) + Math.pow(robotWidth, 2));//inch
     private double circumscribedRadius = circumscribedDiameter / 2;//inch
     private double inch = rev / (wheelDiameter * pi);
-    private double feet = inch * 12;
+    public double feet = inch * 12;
     private double rev2 = 2048;//revolution of 435 rpm motor
     private double inch2 = rev2 / (2 * pi);
     private double feet2 = inch2 * 12;
@@ -142,7 +144,7 @@ public class AutonMethods{
     public void drive(double forward, double sideways, double speed) {
         runtime.reset();
         forward*=CalebDistanceConstant;
-        sideways*=CalebDistanceConstant;
+        sideways*=(CalebSideConstant);
         while (motorFR.isBusy() || motorFL.isBusy()) {
             if (runtime.seconds() > 2) break;
         }
@@ -220,6 +222,12 @@ public class AutonMethods{
         Lift.setTargetPosition(position);
         Lift.setMode(RunMode.RUN_TO_POSITION);
         Lift.setPower(1);
+    }
+    public void IntakeString(double speed) {
+        IntakeString.setPower(speed);
+    }
+    public void MiddleIntakeSpeed(double speed){
+        MiddleIntake.setPower(-1*speed);
     }
 
 
