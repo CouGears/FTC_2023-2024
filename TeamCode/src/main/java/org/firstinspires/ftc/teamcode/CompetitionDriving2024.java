@@ -17,7 +17,7 @@ public class CompetitionDriving2024 extends LinearOpMode {
     public static CRServo IntakeString;
     public static Servo DropServo;
     private AutonMethods robot = new AutonMethods();
-    public int driveswitch = 2;
+    public int driveswitch = 1;
 
     public int intakemode = 0;
     private int liftLimit = 5500;
@@ -45,7 +45,6 @@ public class CompetitionDriving2024 extends LinearOpMode {
         MiddleIntake = hardwareMap.get(DcMotor.class, "MiddleIntake");
         Lift = hardwareMap.get(DcMotor.class, "Lift");
         IntakeString = hardwareMap.get(CRServo.class, "IntakeString");
-
         DropServo = hardwareMap.get(Servo.class, "DropServo");
 
         motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -80,41 +79,42 @@ public class CompetitionDriving2024 extends LinearOpMode {
                 speed = 1;
             } else if (driveswitch == 1) {
                 speed = .66;
-            } else if (driveswitch == 2) {
-                speed = .333;
             }
             if (gamepad1.dpad_left) {
                 DropServo.setPosition(.3);
             }
             else{
-                DropServo.setPosition(0);
+                DropServo.setPosition(.045);
             }
 
 
-            if (gamepad1.a && driveswitch<2) {
-                driveswitch +=1;
+            if (gamepad1.a && driveswitch==1) {
+                driveswitch =0;
             }
-            else if (gamepad1.b && driveswitch>0) {
-                driveswitch -=1;
+            else if (gamepad1.b && driveswitch==0) {
+                driveswitch =1;
             }
-
-            if (gamepad1.right_bumper) {
+            if (gamepad1.y || (gamepad1.right_bumper && gamepad1.left_bumper)) {
                 BackIntake.setPower(1);
-            }
-            else{
-                BackIntake.setPower(0);
-            }
-            if (gamepad1.left_bumper) {
                 MiddleIntake.setPower(-1);
+            }
+            else if (gamepad1.right_bumper) {
+                BackIntake.setPower(1);
+                MiddleIntake.setPower(0);
+            }
+            else if (gamepad1.left_bumper) {
+                MiddleIntake.setPower(-1);
+                BackIntake.setPower(0);
             }
             else{
                 MiddleIntake.setPower(0);
+                BackIntake.setPower(0);
             }
 
 
             motorFL.setPower(((this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) + ((this.gamepad1.left_stick_y)) - (this.gamepad1.left_stick_x)) * speed);
-            motorBL.setPower(-(-(this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) - (this.gamepad1.left_stick_x)) * speed*.7);
-            motorBR.setPower((-(this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed*.7);
+            motorBL.setPower(-(-(this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) - (this.gamepad1.left_stick_x)) * speed);
+            motorBR.setPower((-(this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed);
             motorFR.setPower(-((this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) + (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed);
 
             if (gamepad1.right_trigger>.1) {

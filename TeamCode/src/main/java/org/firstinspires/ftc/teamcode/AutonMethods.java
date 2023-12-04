@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
@@ -10,8 +11,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class AutonMethods{
@@ -43,10 +46,10 @@ public class AutonMethods{
     private double topR = 0;
     private double botL = .35;
     private double topL = 0;
-    private double FRtpos, BRtpos, FLtpos, BLtpos;
-    public static DcMotor motorBR, motorBL, motorFL, motorFR, LiftRight, LiftLeft;
-    //public static DcMotor Forwards = intake, Sideways = carousel;
-    public static Servo intake, armL, armR;
+    public static DcMotor motorBR, motorBL, motorFL, motorFR, BackIntake, MiddleIntake, Lift;
+    public static CRServo IntakeString;
+    public static Servo DropServo;
+    private DistanceSensor LeftDistance, RightDistance;
     private final ElapsedTime runtime = new ElapsedTime();
     public static int Case = 0;
     HardwareMap map;
@@ -56,11 +59,6 @@ public class AutonMethods{
     public static BNO055IMU imu;
     BNO055IMU.Parameters parameters;
     Orientation angles;
-
-    //Initialization
-    public void setIntakePOS(double a) {
-        intake.setPosition(a);
-    }
 
     public void initBasic(HardwareMap map, Telemetry tele) {
         motorFL = map.get(DcMotor.class, "motorFL");
@@ -88,45 +86,36 @@ public class AutonMethods{
         motorBL = map.get(DcMotor.class, "motorBL");
         motorBR = map.get(DcMotor.class, "motorBR");
         motorFR = map.get(DcMotor.class, "motorFR");
-        LiftRight = map.get(DcMotor.class, "LiftRight");
-        LiftLeft = map.get(DcMotor.class, "LiftLeft");
-        // release = map.get(DcMotor.class, "release");
-
-       /* red = map.get(LED.class, "red");
-        green = map.get(LED.class, "green");
-        red2 = map.get(LED.class, "red2");
-        green2 = map.get(LED.class, "green2");*/
-
-        intake = map.get(Servo.class, "intake");
+        BackIntake = map.get(DcMotor.class, "BackIntake");
+        MiddleIntake = map.get(DcMotor.class, "MiddleIntake");
+        Lift = map.get(DcMotor.class, "Lift");
+        IntakeString = map.get(CRServo.class, "IntakeString");
+        DropServo = map.get(Servo.class, "DropServo");
+        LeftDistance = map.get(DistanceSensor.class, "LeftDistance");
+        RightDistance = map.get(DistanceSensor.class, "RightDistance");
 
 
-        motorFL.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-        motorBL.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-        motorFR.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-        motorBR.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-        LiftLeft.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-        LiftRight.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-
-        //  release.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        MiddleIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         motorFL.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
         motorFR.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBR.setDirection(DcMotorSimple.Direction.FORWARD);
-        LiftLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        LiftRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        // release.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        LiftLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        LiftRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        BackIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+        MiddleIntake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         motorFL.setTargetPosition(0);
         motorBL.setTargetPosition(0);
         motorFR.setTargetPosition(0);
         motorBR.setTargetPosition(0);
-        LiftLeft.setTargetPosition(0);
-        LiftRight.setTargetPosition(0);
+        BackIntake.setTargetPosition(0);
+        MiddleIntake.setTargetPosition(0);
 
         int relativeLayoutId = map.appContext.getResources().getIdentifier("RelativeLayout", "id", map.appContext.getPackageName());
 
@@ -139,8 +128,9 @@ public class AutonMethods{
         motorBL.setPower(0);
         motorBR.setPower(0);
         motorFR.setPower(0);
-        LiftLeft.setPower(0);
-        LiftRight.setPower(0);
+        MiddleIntake.setPower(0);
+        BackIntake.setPower(0);
+        Lift.setPower(0);
 
     }
 
@@ -161,10 +151,10 @@ public class AutonMethods{
         motorFR.setMode(RunMode.STOP_AND_RESET_ENCODER);
         motorBR.setMode(RunMode.STOP_AND_RESET_ENCODER);
 
-        FRtpos = forward - sideways;
-        BRtpos = forward + sideways;
-        FLtpos = forward + sideways;
-        BLtpos = forward - sideways;
+        double FRtpos = forward - sideways;
+        double BRtpos = forward + sideways;
+        double FLtpos = forward + sideways;
+        double BLtpos = forward - sideways;
 
         motorFL.setTargetPosition(-(int) FLtpos);
         motorBL.setTargetPosition((int) BLtpos);
@@ -213,18 +203,23 @@ public class AutonMethods{
 
     }
 
+    public void DropSetPosition(double deg) {
+        DropServo.setPosition(deg);
+    }
 
-    public void LiftArmSetPosition(int position) {
-        LiftLeft.setTargetPosition(position);
-        LiftRight.setTargetPosition(position);
-        LiftRight.setMode(RunMode.RUN_TO_POSITION);
-        LiftLeft.setMode(RunMode.RUN_TO_POSITION);
-        LiftLeft.setPower(1);
-        LiftRight.setPower(1);
-        double left = maps(LiftLeft.getCurrentPosition(), 0, topLiftEncoder, botL, topL);
-        double right = maps(LiftLeft.getCurrentPosition(), 0, topLiftEncoder, botR, topR);
-        armL.setPosition(left);
-        armR.setPosition(right);
+    public double GetLeftDistance(){
+        return LeftDistance.getDistance(DistanceUnit.CM);
+    }
+
+    public double GetRightDistance(){
+        return RightDistance.getDistance(DistanceUnit.CM);
+    }
+
+
+    public void LiftSetPosition(int position) {
+        Lift.setTargetPosition(position);
+        Lift.setMode(RunMode.RUN_TO_POSITION);
+        Lift.setPower(1);
     }
 
 
