@@ -46,7 +46,7 @@ public class TurnTest extends LinearOpMode {
             motorBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motorBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motorFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            double deltaturn = 3800;
+            double deltaturn = 7750;
 
             motorFL.setTargetPosition(-(int) deltaturn);
             motorBL.setTargetPosition((int) deltaturn);
@@ -62,7 +62,7 @@ public class TurnTest extends LinearOpMode {
             motorBR.setPower(0.5);
 
             try {
-                Thread.sleep(5000);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
 
             }
