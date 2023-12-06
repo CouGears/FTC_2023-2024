@@ -27,12 +27,12 @@ public class AutonMethods{
     //Declare and initial variables
     private double rev = 537.7;//revolution of 312 rpm motor , find at https://www.gobilda.com/5202-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-6mm-d-shaft-312-rpm-36mm-gearbox-3-3-5v-encoder/  called encoder resolution
     private double pi = 3.14;
-    private double wheelDiameter = 3.77953;//inch
+    private double  wheelDiameter = 3.77953;//inch
     private double robotWidth = 14;//inch
     private double robotLength = 17;//inch
-    private double CalebTurnConstant = .9;
+    private double CalebTurnConstant = 1.54;
     private double CalebDistanceConstant = 2;
-    private double CalebSideConstant = CalebDistanceConstant*1.371;
+    private double CalebSideConstant = CalebDistanceConstant*1.11;
 
 
     private double circumscribedDiameter = Math.sqrt(Math.pow(robotLength, 2) + Math.pow(robotWidth, 2));//inch
@@ -181,7 +181,6 @@ public class AutonMethods{
 
     //circumscribed robot has a diameter of 21 inches
     public void turn(double deg) {
-        deg *= CalebTurnConstant;
         while (motorFR.isBusy() || motorFL.isBusy()) {
             if (runtime.seconds() > 2) break;
         }
@@ -189,7 +188,8 @@ public class AutonMethods{
         motorBL.setMode(RunMode.STOP_AND_RESET_ENCODER);
         motorBR.setMode(RunMode.STOP_AND_RESET_ENCODER);
         motorFR.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        double deltaturn = (deg / 360.0) * circumscribedDiameter * pi * inch;
+        double deltaturn = (deg / 30) * 600;
+
         motorFL.setTargetPosition(-(int) deltaturn);
         motorBL.setTargetPosition((int) deltaturn);
         motorFR.setTargetPosition((int) deltaturn);

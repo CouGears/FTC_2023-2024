@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.AutonMethods;
+
 @TeleOp
 public class OpenHousePuzzle3 extends LinearOpMode {
 
@@ -68,7 +70,7 @@ public class OpenHousePuzzle3 extends LinearOpMode {
                     } else if (step == 1) {
                         robot.drive(2 * robot.feet, 0, .25);
                     } else if (step == 2) {
-                        robot.turn(-180, .25);
+                        robot.turn(-180);
                         currentMode = ""; // Sequence finished, reset mode
                         step = -1; // Reset step counter
                     }
@@ -78,7 +80,7 @@ public class OpenHousePuzzle3 extends LinearOpMode {
                 case "Y":
                     // Execute the next step in the Y sequence
                     if (step == 0) {
-                        robot.turn(90, .25);
+                        robot.turn(90);
                     } else if (step == 1) {
                         robot.drive(2 * robot.feet, 0, .25);
                     } else if (step == 2) {
@@ -86,7 +88,7 @@ public class OpenHousePuzzle3 extends LinearOpMode {
                     } else if (step == 3) {
                         robot.drive(-2 * robot.feet, 0, .25);
                     } else if (step == 4) {
-                        robot.turn(-90, .25);
+                        robot.turn(-90);
                         currentMode = ""; // Sequence finished, reset mode
                         step = -1; // Reset step counter
                     }
