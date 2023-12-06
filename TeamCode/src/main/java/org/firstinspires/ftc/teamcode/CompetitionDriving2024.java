@@ -84,7 +84,7 @@ public class CompetitionDriving2024 extends LinearOpMode {
                 speed = .66;
             }
             if (gamepad1.dpad_left) {
-                DropServo.setPosition(.3);
+                DropServo.setPosition(.25);
             }
             else{
                 DropServo.setPosition(.045);
@@ -139,9 +139,9 @@ public class CompetitionDriving2024 extends LinearOpMode {
 
             //LIFT
             if ((gamepad1.dpad_up && Lift.getCurrentPosition() >= liftLimit) || (gamepad1.dpad_up && gamepad1.dpad_right)) {
-                Lift.setPower(.5);
+                Lift.setPower(.33);
             } else if ((gamepad1.dpad_down && Lift.getCurrentPosition() <= 0) || (gamepad1.dpad_down && gamepad1.dpad_right)){ //At 500 b/c motor will overspin w/ momentum and end up <0
-                Lift.setPower(-.5);
+                Lift.setPower(-.33);
             } else {
                 Lift.setPower(0);
             }
