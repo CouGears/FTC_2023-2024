@@ -80,8 +80,9 @@ public class FrontRedAuton extends OpMode {
     public void loop() {
         switch (robot.counter) {
             case 0:
+                robot.LiftSetPosition(-100);
                 robot.DropSetPosition(.045);
-                robot.counter++;
+                //robot.counter++;
                 break;
             case 1:
                 robot.drive(0, 4*inch, .5);
