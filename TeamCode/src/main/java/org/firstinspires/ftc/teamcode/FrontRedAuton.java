@@ -55,15 +55,15 @@ public class FrontRedAuton extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     AutonMethods robot = new AutonMethods();
     HardwareMap map;
-    Telemetry tele;
+    Telemetry tele = telemetry;
 
     @Override
 
     public void init() {
 
-        robot.init(hardwareMap, telemetry, false);
+        robot.init(hardwareMap, tele, false);
 
-        telemetry.addData("Status", "Initialized");
+        tele.addData("Status", "Initialized");
 
     }
 
@@ -84,7 +84,7 @@ public class FrontRedAuton extends OpMode {
                 robot.counter++;
                 break;
             case 1:
-                robot.drive(0, -4*inch, .5);
+                robot.drive(0, 4*inch, .5);
                 robot.counter++;
                 break;
             case 2:
@@ -93,19 +93,19 @@ public class FrontRedAuton extends OpMode {
                 break;
 
             case 3:
-                robot.drive(0, -2*feet, .5);
+                robot.drive(0, 2*feet, .5);
                 robot.counter++;
                 break;
             case 4:
-                //eliezer fancy shmancy code
+                //eliezer fancy shmancy code we want it 4 inches from the board
                 robot.counter++;
                 break;
             case 5:
-                robot.LiftSetPosition(50);//idk ill have to like do some fancy shmancy stuff to see if this is right
+                robot.LiftSetPosition(-100);//idk ill have to like do some fancy shmancy stuff to see if this is right
                 robot.counter++;
                 break;
             case 6:
-                robot.DropSetPosition(.3);
+                robot.DropSetPosition(.25);
                 robot.counter++;
                 break;
             case 7:
@@ -133,7 +133,7 @@ public class FrontRedAuton extends OpMode {
                 robot.counter++;
                 break;
             case 13:
-                robot.LiftSetPosition(50);//idk ill have to like do some fancy shmancy stuff to see if this is right
+                robot.LiftSetPosition(-1380);//idk ill have to like do some fancy shmancy stuff to see if this is right
                 robot.counter++;
                 break;
             case 14:
@@ -145,7 +145,7 @@ public class FrontRedAuton extends OpMode {
                 robot.counter++;
                 break;
             case 16:
-                robot.DropSetPosition(.045);
+                robot.DropSetPosition(.25);
                 robot.counter++;
                 break;
             case 17:
@@ -153,7 +153,7 @@ public class FrontRedAuton extends OpMode {
                 robot.counter++;
                 break;
             case 18:
-                robot.drive(0, 2*feet, .5);
+                robot.drive(0, -2*feet, .5);
                 robot.counter++;
                 break;
             case 19:

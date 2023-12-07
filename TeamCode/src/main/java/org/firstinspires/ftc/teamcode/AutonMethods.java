@@ -63,6 +63,7 @@ public class AutonMethods{
     Orientation angles;
 
     public void initBasic(HardwareMap map, Telemetry tele) {
+        this.tele = tele;
         motorFL = map.get(DcMotor.class, "motorFL");
         motorBL = map.get(DcMotor.class, "motorBL");
         motorBR = map.get(DcMotor.class, "motorBR");
@@ -84,6 +85,7 @@ public class AutonMethods{
         motorBR.setTargetPosition(0);
     }
     public void init(HardwareMap map, Telemetry tele, boolean auton) {
+        this.tele = tele;
         motorFL = map.get(DcMotor.class, "motorFL");
         motorBL = map.get(DcMotor.class, "motorBL");
         motorBR = map.get(DcMotor.class, "motorBR");
@@ -121,8 +123,8 @@ public class AutonMethods{
 
         int relativeLayoutId = map.appContext.getResources().getIdentifier("RelativeLayout", "id", map.appContext.getPackageName());
 
-         tele.addData(">", "Gyro Calibrating. Do Not Move!");
-        tele.update();
+         this.tele.addData(">", "Gyro Calibrating. Do Not Move!");
+        this.tele.update();
     }
 
     public void kill() {
@@ -218,11 +220,48 @@ public class AutonMethods{
     }
 
 
-    public void LiftSetPosition(int position) {
-        Lift.setTargetPosition(position);
-        Lift.setMode(RunMode.RUN_TO_POSITION);
-        Lift.setPower(1);
+    public void LiftSetPosition(int targetPosition) {
+        if (tele == null) {
+            throw new IllegalStateException("Telemetry is not initialized.");
+        }
+
+        int currentPosition;
+        double power;
+        double movementPower = 0.5; // Set this to a suitable constant power for moving the lift
+        int errorMargin = 10; // Acceptable range to consider the target reached
+
+        while (true) {
+            currentPosition = Lift.getCurrentPosition(); // Get the current position
+            int error = targetPosition - currentPosition;
+
+            // Provide telemetry data
+            tele.addData("Current Position", currentPosition);
+            tele.addData("Target Position", targetPosition);
+            tele.addData("Error", error);
+            tele.update();
+
+            // Determine motor power direction based on the target position
+            if (Math.abs(error) <= errorMargin) {
+                // If the lift is within the error margin, stop the motor and exit the loop
+                Lift.setPower(0);
+                break;
+            } else if (error > 0) {
+                // If the lift needs to move up
+                power = movementPower;
+            } else {
+                // If the lift needs to move down
+                power = -movementPower;
+            }
+
+            Lift.setPower(power); // Set the motor power
+
+            // Optional: Add a small delay to prevent too frequent motor updates
+            sleep(10);
+        }
     }
+
+
+
     public void IntakeString(double speed) {
         IntakeString.setPower(speed);
     }
