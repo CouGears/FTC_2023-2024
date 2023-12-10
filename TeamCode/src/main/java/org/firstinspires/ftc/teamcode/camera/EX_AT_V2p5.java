@@ -28,14 +28,15 @@
  */
 
 package org.firstinspires.ftc.teamcode.camera;
+import static java.lang.Math.sqrt;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import org.firstinspires.ftc.teamcode.AutonMethods;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
@@ -82,7 +83,7 @@ import java.util.concurrent.TimeUnit;
 @TeleOp
 //******************WORKS!******************
 
-public class ExampleAprilTagTest extends LinearOpMode
+public class EX_AT_V2p5 extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.
     final double DESIRED_DISTANCE = 11.0; //  this is how close the camera should get to the target (inches)
@@ -108,59 +109,39 @@ public class ExampleAprilTagTest extends LinearOpMode
     private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
+    AutonMethods robot = new AutonMethods();
+    public double FRtpos, BRtpos, FLtpos, BLtpos;
 
     @Override public void runOpMode()
     {
 
         boolean targetFound     = false;    // Set to true when an AprilTag target is detected
-        double  drive           = 0;        // Desired forward power/speed (-1 to +1)
-        double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
-        double  turn            = 0;        // Desired turning power/speed (-1 to +1)
+//        double  drive           = 0;        // Desired forward power/speed (-1 to +1)
+//        double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
+//        double  turn            = 0;        // Desired turning power/speed (-1 to +1)
 
-        // Initialize the Apriltag Detection process
         initAprilTag();
 
-        leftFrontDrive   = hardwareMap.get(DcMotor.class, "motorFL");  //  Used to control the left front drive wheel
-        rightFrontDrive  = hardwareMap.get(DcMotor.class, "motorFR");  //  Used to control the right front drive wheel
-        leftBackDrive    = hardwareMap.get(DcMotor.class, "motorBL");  //  Used to control the left back drive wheel
-        rightBackDrive   = hardwareMap.get(DcMotor.class, "motorBR");  //  Used to control the right back drive wheel
-
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must match the names assigned during the robot configuration.
-        // step (using the FTC Robot Controller app on the phone).
-
-
-        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-        // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
-        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
+        hardwareSetup();
 
 
 
-
-        if (USE_WEBCAM)
-            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+        if (USE_WEBCAM) {setManualExposure(6, 250);}  // Use low exposure time to reduce motion blur
 
         // Wait for driver to press start
         telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
+
         waitForStart();
 
         while (opModeIsActive())
         {
+
             targetFound = false;
             desiredTag  = null;
 
-            // Step through the list of detected tags and look for a matching tag
+
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
             for (AprilTagDetection detection : currentDetections) {
                 if ((detection.metadata != null) &&
@@ -177,17 +158,46 @@ public class ExampleAprilTagTest extends LinearOpMode
             if (targetFound) {
                 telemetry.addData(">","HOLD Left-Bumper to Drive to Target\n");
                 telemetry.addData("Target", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-                telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-                telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
-                telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
             } else {
                 telemetry.addData(">","Drive using joysticks to find valid target\n");
             }
 
             // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
             if (gamepad1.left_bumper && targetFound) {
+                double radBearing = Math.toRadians(desiredTag.ftcPose.bearing);
+                double strafe = desiredTag.ftcPose.range * Math.cos(radBearing);
+                if (desiredTag.ftcPose.bearing > 0){ strafe *= -1; }
+                double forward = sqrt(Math.pow(desiredTag.ftcPose.range, 2) - Math.pow(strafe, 2));
 
-                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+                FRtpos = forward - strafe;
+                BRtpos = forward + strafe;
+                FLtpos = forward + strafe;
+                BLtpos = forward - strafe;
+
+                leftFrontDrive.setTargetPosition(-(int) FLtpos);
+                leftBackDrive.setTargetPosition((int) BLtpos);
+                rightFrontDrive.setTargetPosition(-(int) FRtpos);
+                rightBackDrive.setTargetPosition((int) BRtpos);
+
+                leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                telemetry.addData("desiredTag.ftcPose.bearing = %2f", desiredTag.ftcPose.bearing);
+                telemetry.addData("desiredTag.ftcPose.range = %2f", desiredTag.ftcPose.range);
+                telemetry.addData("strafe = %2f", strafe);
+                telemetry.addData("forward = %2f", forward);
+
+
+//                robot.drive(desiredTag.ftcPose.range - 6, strafe, .5);
+//                robot.turn(desiredTag.ftcPose.bearing);
+//                robot.drive(0, 7, .5);
+
+
+
+                /*
+                                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                 double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
                 double  headingError    = desiredTag.ftcPose.bearing;
                 double  yawError        = desiredTag.ftcPose.yaw;
@@ -198,21 +208,49 @@ public class ExampleAprilTagTest extends LinearOpMode
                 strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
                 telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-            } else {
+                                moveRobot(drive, strafe, turn);
+                 */
 
-                // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
-                drive  = -gamepad1.left_stick_y  / 2.0;  // Reduce drive rate to 50%.
-                strafe = -gamepad1.left_stick_x  / 2.0;  // Reduce strafe rate to 50%.
-                turn   = -gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
-                telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+
+
+            } else {
+                leftFrontDrive.setPower(((this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) + ((this.gamepad1.left_stick_y)) - (this.gamepad1.left_stick_x)) * 1);
+                leftBackDrive.setPower(-(-(this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) - (this.gamepad1.left_stick_x)) * 1);
+                rightBackDrive.setPower((-(this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * 1);
+                rightFrontDrive.setPower(-((this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) + (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * 1);
+                telemetry.addData("Manual","");
             }
             telemetry.update();
 
             // Apply desired axes motions to the drivetrain.
-            moveRobot(drive, strafe, turn);
             sleep(10);
         }
     }
+
+    void hardwareSetup(){
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFL");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "motorBL");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "motorBR");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFR");
+
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        leftFrontDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+    }
+
+
+
+
+
+
+
+
 
     /**
      * Move robot according to desired axes motions
@@ -222,33 +260,36 @@ public class ExampleAprilTagTest extends LinearOpMode
      * Positive Y is strafe left
      * <p>
      * Positive Yaw is counter-clockwise
+     *
+
+     *     }
      */
-    public void moveRobot(double x, double y, double yaw) {
 
-        double leftFrontPower    =  x -y -yaw;
-        double rightFrontPower   =  x +y +yaw;
-        double leftBackPower     =  x +y -yaw;
-        double rightBackPower    =  x -y +yaw;
+             public void moveRobot(double x, double y, double yaw) {
 
-        // Normalize wheel powers to be less than 1.0
-        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
-        max = Math.max(max, Math.abs(leftBackPower));
-        max = Math.max(max, Math.abs(rightBackPower));
+                 double leftFrontPower = x - y - yaw;
+                 double rightFrontPower = x + y + yaw;
+                 double leftBackPower = x + y - yaw;
+                 double rightBackPower = x - y + yaw;
 
-        if (max > 1.0) {
-            leftFrontPower /= max;
-            rightFrontPower /= max;
-            leftBackPower /= max;
-            rightBackPower /= max;
-        }
+                 // Normalize wheel powers to be less than 1.0
+                 double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+                 max = Math.max(max, Math.abs(leftBackPower));
+                 max = Math.max(max, Math.abs(rightBackPower));
 
-        // Send powers to the wheels.
-        leftFrontDrive.setPower(leftFrontPower);
-        rightFrontDrive.setPower(rightFrontPower);
-        leftBackDrive.setPower(leftBackPower);
-        rightBackDrive.setPower(rightBackPower);
-    }
+                 if (max > 1.0) {
+                     leftFrontPower /= max;
+                     rightFrontPower /= max;
+                     leftBackPower /= max;
+                     rightBackPower /= max;
+                 }
 
+                 // Send powers to the wheels.
+                 leftFrontDrive.setPower(leftFrontPower);
+                 rightFrontDrive.setPower(rightFrontPower);
+                 leftBackDrive.setPower(leftBackPower);
+                 rightBackDrive.setPower(rightBackPower);
+             }
     /**
      * Initialize the AprilTag processor.
      */

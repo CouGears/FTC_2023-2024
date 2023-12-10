@@ -44,7 +44,7 @@ public class AutonMethods {
     private double topR = 0;
     private double botL = .35;
     private double topL = 0;
-    private double FRtpos, BRtpos, FLtpos, BLtpos;
+    public double FRtpos, BRtpos, FLtpos, BLtpos;
     public static DcMotor motorBR, motorBL, motorFL, motorFR;
     public static DistanceSensor distanceSensor, distanceSensorBack;
     // public static LED red, green, red2, green2;
