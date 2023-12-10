@@ -39,7 +39,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 //This auton is for Red Board Side
 
 @Autonomous
-public class FrontRedAuton extends OpMode {
+public class BackLeftAuton extends OpMode {
 
     //TensorFlowVision vision = new TensorFlowVision();
 //   double rev = 383.6; //435 rpm motor
@@ -98,7 +98,7 @@ public class FrontRedAuton extends OpMode {
                 robot.counter++;
                 break;
             case 4:
-                robot.drive(9*inch, 0*feet, .5);
+                robot.drive(4*feet+9*inch, -0*feet, .5);
                 robot.counter++;
                 break;
             case 5:
@@ -111,7 +111,7 @@ public class FrontRedAuton extends OpMode {
                 break;
             case 7:
                 robot.sleep(1000);
-                robot.drive(-4*inch, 0*feet, .5);
+                robot.drive(-4*inch, -0*feet, .5);
                 robot.counter++;
                 break;
             case 8:
@@ -155,11 +155,9 @@ public class FrontRedAuton extends OpMode {
                 robot.counter++;
                 break;
             case 18:
-                robot.drive(0, -2*feet, .5);
                 robot.counter++;
                 break;
             case 19:
-                robot.drive(.5*feet, 0, .5);
                 robot.counter++;
                 break;
             case 20:

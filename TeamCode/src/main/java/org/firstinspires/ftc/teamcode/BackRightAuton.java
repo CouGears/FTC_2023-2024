@@ -39,7 +39,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 //This auton is for Red Board Side
 
 @Autonomous
-public class BackRedAuton extends OpMode {
+public class BackRightAuton extends OpMode {
 
     //TensorFlowVision vision = new TensorFlowVision();
 //   double rev = 383.6; //435 rpm motor
@@ -55,15 +55,16 @@ public class BackRedAuton extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     AutonMethods robot = new AutonMethods();
     HardwareMap map;
-    Telemetry tele;
+    Telemetry tele = telemetry;
 
     @Override
 
     public void init() {
 
-        robot.init(hardwareMap, telemetry, false);
+        robot.init(hardwareMap, tele, false);
+        robot.DropSetPosition(.045);
 
-        telemetry.addData("Status", "Initialized");
+        tele.addData("Status", "Initialized");
 
     }
 
@@ -93,98 +94,84 @@ public class BackRedAuton extends OpMode {
                 break;
 
             case 3:
-                robot.drive(0, -2*feet, .5);
+                robot.drive(0, -2.5*feet, .5);
                 robot.counter++;
                 break;
             case 4:
-                robot.drive(4*feet, 0, .5);
+                robot.drive(4*feet+9*inch, -0*feet, .5);
                 robot.counter++;
                 break;
             case 5:
-                //eliezer fancy shmancy code
+                robot.LiftSetPosition(-1380);//idk ill have to like do some fancy shmancy stuff to see if this is right
                 robot.counter++;
                 break;
             case 6:
-                robot.LiftSetPosition(50);//idk ill have to like do some fancy shmancy stuff to see if this is right
+                robot.DropSetPosition(.35);
                 robot.counter++;
                 break;
             case 7:
-                robot.DropSetPosition(.3);
+                robot.sleep(1000);
+                robot.drive(-4*inch, -0*feet, .5);
                 robot.counter++;
                 break;
             case 8:
-                robot.sleep(1000);
+                robot.DropSetPosition(.045);
                 robot.counter++;
                 break;
             case 9:
-                robot.DropSetPosition(.045);
+                //robot.LiftSetPosition(0);
                 robot.counter++;
                 break;
             case 10:
-                robot.LiftSetPosition(0);
+                //robot.MiddleIntakeSpeed(1);
                 robot.counter++;
                 break;
             case 11:
-                robot.MiddleIntakeSpeed(1);
+                //robot.sleep(1000);
                 robot.counter++;
                 break;
             case 12:
-                robot.sleep(1000);
+                //robot.MiddleIntakeSpeed(0);
                 robot.counter++;
                 break;
             case 13:
-                robot.MiddleIntakeSpeed(0);
+                //robot.LiftSetPosition(-1380);//idk ill have to like do some fancy shmancy stuff to see if this is right
                 robot.counter++;
                 break;
             case 14:
-                robot.LiftSetPosition(50);//idk ill have to like do some fancy shmancy stuff to see if this is right
+                //robot.DropSetPosition(.3);
                 robot.counter++;
                 break;
             case 15:
-                robot.DropSetPosition(.3);
+                //robot.sleep(1000);
                 robot.counter++;
                 break;
             case 16:
-                robot.sleep(1000);
+                //robot.DropSetPosition(.25);
                 robot.counter++;
                 break;
             case 17:
-                robot.DropSetPosition(.045);
+                //robot.LiftSetPosition(0);
                 robot.counter++;
                 break;
             case 18:
-                robot.LiftSetPosition(0);
                 robot.counter++;
                 break;
             case 19:
-                robot.drive(0, 2*feet, .5);
                 robot.counter++;
                 break;
             case 20:
-                robot.drive(1*feet, 0, .5);
+                robot.IntakeString(1);
                 robot.counter++;
                 break;
             case 21:
-                robot.IntakeString(1);
+                robot.sleep(1000);
                 robot.counter++;
                 break;
             case 22:
-                robot.sleep(1000);
-                robot.counter++;
-                break;
-            case 23:
-                robot.IntakeString(1);
-                robot.counter++;
-                break;
-            case 24:
-                robot.sleep(1000);
-                robot.counter++;
-                break;
-            case 25:
                 robot.IntakeString(0);
                 robot.counter++;
                 break;
-
 
 
         }
