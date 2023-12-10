@@ -62,6 +62,7 @@ public class FrontRedAuton extends OpMode {
     public void init() {
 
         robot.init(hardwareMap, tele, false);
+        robot.DropSetPosition(.045);
 
         tele.addData("Status", "Initialized");
 
@@ -80,9 +81,8 @@ public class FrontRedAuton extends OpMode {
     public void loop() {
         switch (robot.counter) {
             case 0:
-                robot.LiftSetPosition(-100);
                 robot.DropSetPosition(.045);
-                //robot.counter++;
+                robot.counter++;
                 break;
             case 1:
                 robot.drive(0, 4*inch, .5);
@@ -94,23 +94,24 @@ public class FrontRedAuton extends OpMode {
                 break;
 
             case 3:
-                robot.drive(0, 2*feet, .5);
+                robot.drive(0, 2.5*feet, .5);
                 robot.counter++;
                 break;
             case 4:
-                //eliezer fancy shmancy code we want it 4 inches from the board
+                robot.drive(9*inch, 0*feet, .5);
                 robot.counter++;
                 break;
             case 5:
-                robot.LiftSetPosition(-100);//idk ill have to like do some fancy shmancy stuff to see if this is right
+                robot.LiftSetPosition(-1380);//idk ill have to like do some fancy shmancy stuff to see if this is right
                 robot.counter++;
                 break;
             case 6:
-                robot.DropSetPosition(.25);
+                robot.DropSetPosition(.35);
                 robot.counter++;
                 break;
             case 7:
                 robot.sleep(1000);
+                robot.drive(-4*inch, 0*feet, .5);
                 robot.counter++;
                 break;
             case 8:
@@ -118,39 +119,39 @@ public class FrontRedAuton extends OpMode {
                 robot.counter++;
                 break;
             case 9:
-                robot.LiftSetPosition(0);
+                //robot.LiftSetPosition(0);
                 robot.counter++;
                 break;
             case 10:
-                robot.MiddleIntakeSpeed(1);
+                //robot.MiddleIntakeSpeed(1);
                 robot.counter++;
                 break;
             case 11:
-                robot.sleep(1000);
+                //robot.sleep(1000);
                 robot.counter++;
                 break;
             case 12:
-                robot.MiddleIntakeSpeed(0);
+                //robot.MiddleIntakeSpeed(0);
                 robot.counter++;
                 break;
             case 13:
-                robot.LiftSetPosition(-1380);//idk ill have to like do some fancy shmancy stuff to see if this is right
+                //robot.LiftSetPosition(-1380);//idk ill have to like do some fancy shmancy stuff to see if this is right
                 robot.counter++;
                 break;
             case 14:
-                robot.DropSetPosition(.3);
+                //robot.DropSetPosition(.3);
                 robot.counter++;
                 break;
             case 15:
-                robot.sleep(1000);
+                //robot.sleep(1000);
                 robot.counter++;
                 break;
             case 16:
-                robot.DropSetPosition(.25);
+                //robot.DropSetPosition(.25);
                 robot.counter++;
                 break;
             case 17:
-                robot.LiftSetPosition(0);
+                //robot.LiftSetPosition(0);
                 robot.counter++;
                 break;
             case 18:
@@ -158,7 +159,7 @@ public class FrontRedAuton extends OpMode {
                 robot.counter++;
                 break;
             case 19:
-                robot.drive(1*feet, 0, .5);
+                robot.drive(.5*feet, 0, .5);
                 robot.counter++;
                 break;
             case 20:
@@ -170,18 +171,9 @@ public class FrontRedAuton extends OpMode {
                 robot.counter++;
                 break;
             case 22:
-                robot.IntakeString(1);
-                robot.counter++;
-                break;
-            case 23:
-                robot.sleep(1000);
-                robot.counter++;
-                break;
-            case 24:
                 robot.IntakeString(0);
                 robot.counter++;
                 break;
-
 
 
         }

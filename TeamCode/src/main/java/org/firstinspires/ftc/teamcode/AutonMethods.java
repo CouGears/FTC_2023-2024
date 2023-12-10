@@ -114,6 +114,10 @@ public class AutonMethods{
         BackIntake.setDirection(DcMotorSimple.Direction.REVERSE);
         MiddleIntake.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        Lift.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Lift.setDirection(DcMotorSimple.Direction.REVERSE);
+
         motorFL.setTargetPosition(0);
         motorBL.setTargetPosition(0);
         motorFR.setTargetPosition(0);
@@ -225,40 +229,54 @@ public class AutonMethods{
             throw new IllegalStateException("Telemetry is not initialized.");
         }
 
-        int currentPosition;
-        double power;
-        double movementPower = 0.5; // Set this to a suitable constant power for moving the lift
         int errorMargin = 10; // Acceptable range to consider the target reached
 
-        while (true) {
-            currentPosition = Lift.getCurrentPosition(); // Get the current position
-            int error = targetPosition - currentPosition;
+        // Basic motor setup
+        Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            // Provide telemetry data
-            tele.addData("Current Position", currentPosition);
+        int currentPosition = Lift.getCurrentPosition(); // Get the current position
+        tele.addData("Current Position", currentPosition);
+        tele.addData("Target Position", targetPosition);
+        tele.update();
+
+        // Calculate the direction to move
+        int direction = targetPosition > currentPosition ? 1 : -1;
+        // Set a constant power level for movement (adjust as necessary)
+        double power = -0.006 * direction;
+
+
+        while (Math.abs(Lift.getCurrentPosition() - targetPosition) > errorMargin) {
+            if(Math.abs(Lift.getCurrentPosition())>Math.abs(targetPosition)){
+                Lift.setPower(0);
+                return;
+            }
+            Lift.setPower(power);
+
+            // Update telemetry
+            tele.addData("Current Position", Lift.getCurrentPosition());
             tele.addData("Target Position", targetPosition);
-            tele.addData("Error", error);
+            tele.addData("Motor Power", power);
             tele.update();
 
-            // Determine motor power direction based on the target position
-            if (Math.abs(error) <= errorMargin) {
-                // If the lift is within the error margin, stop the motor and exit the loop
-                Lift.setPower(0);
-                break;
-            } else if (error > 0) {
-                // If the lift needs to move up
-                power = movementPower;
-            } else {
-                // If the lift needs to move down
-                power = -movementPower;
+            // Optional delay for telemetry update
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
             }
-
-            Lift.setPower(power); // Set the motor power
-
-            // Optional: Add a small delay to prevent too frequent motor updates
-            sleep(10);
         }
+
+        // Stop the motor once the target is reached
+        Lift.setPower(0);
+        tele.addData("Status", "Target Reached");
+        tele.update();
     }
+
+
+
+
+
 
 
 
