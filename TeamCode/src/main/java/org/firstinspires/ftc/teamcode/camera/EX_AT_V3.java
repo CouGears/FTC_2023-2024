@@ -30,7 +30,7 @@ public class EX_AT_V3 extends LinearOpMode {
     final double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
 
     //-----------------------------NO TOUCH VARS >:(-----------------------------
-    final double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
+    final double DESIRED_DISTANCE = 5.0; //  this is how close the camera should get to the target (inches)
 
     private DcMotor motorFL = null;  //  Used to control the left front drive wheel
     private DcMotor motorFR = null;  //  Used to control the right front drive wheel
@@ -81,6 +81,7 @@ public class EX_AT_V3 extends LinearOpMode {
             }
             if (gamepad1.x){ attempt = 0;}
             telemetry.addData("x = ", "Reset attempt");
+
             //-----------------------------FIND AT----------------------------- (WORKS [* NO TOUCHY >:( *])
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
             for (AprilTagDetection detection : currentDetections) {
@@ -207,6 +208,7 @@ public class EX_AT_V3 extends LinearOpMode {
                 motorFR.setPower(-((this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) + (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * 1);
                 telemetry.addData(">", "Manual");
             }
+            telemetry.update();
         }
     }
 
