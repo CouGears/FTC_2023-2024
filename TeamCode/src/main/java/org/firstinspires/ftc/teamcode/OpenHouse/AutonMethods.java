@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Old_2022_2023;
+package org.firstinspires.ftc.teamcode.OpenHouse;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -24,13 +25,16 @@ public class AutonMethods {
     //Declare and initial variables
     private double rev = 537.7;//revolution of 312 rpm motor , find at https://www.gobilda.com/5202-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-6mm-d-shaft-312-rpm-36mm-gearbox-3-3-5v-encoder/  called encoder resolution
     private double pi = 3.14;
-    private double wheelDiameter = 3.77953;//inch
-    private double robotWidth = 12.75;//inch
-    private double robotLength = 13;//inch
+    private double wheelDiameter = 4;//inch
+    private double robotWidth = 18;//inch
+    private double robotLength = 19;//inch
+    private double CalebTurnConstant = .8565;
+    private double CalebDistanceConstant = .725;
+
     private double circumscribedDiameter = Math.sqrt(Math.pow(robotLength, 2) + Math.pow(robotWidth, 2));//inch
     private double circumscribedRadius = circumscribedDiameter / 2;//inch
     private double inch = rev / (wheelDiameter * pi);
-    private double feet = inch * 12;
+    public double feet = inch * 12;
     private double rev2 = 2048;//revolution of 435 rpm motor
     private double inch2 = rev2 / (2 * pi);
     private double feet2 = inch2 * 12;
@@ -40,10 +44,8 @@ public class AutonMethods {
     private double topR = 0;
     private double botL = .35;
     private double topL = 0;
-    private double FRtpos, BRtpos, FLtpos, BLtpos;
-    public static DcMotor motorBR, motorBL, motorFL, motorFR, LiftRight, LiftLeft;
-    //public static DcMotor Forwards = intake, Sideways = carousel;
-    public static Servo intake, armL, armR;
+    public double FRtpos, BRtpos, FLtpos, BLtpos;
+    public static DcMotor motorBR, motorBL, motorFL, motorFR;
     public static DistanceSensor distanceSensor, distanceSensorBack;
     // public static LED red, green, red2, green2;
     public TouchSensor armTouch;
@@ -57,19 +59,12 @@ public class AutonMethods {
     BNO055IMU.Parameters parameters;
     Orientation angles;
 
-    //Initialization
-    public void setIntakePOS(double a) {
-        intake.setPosition(a);
-    }
-
-
     public void init(HardwareMap map, Telemetry tele, boolean auton) {
         motorFL = map.get(DcMotor.class, "motorFL");
         motorBL = map.get(DcMotor.class, "motorBL");
         motorBR = map.get(DcMotor.class, "motorBR");
         motorFR = map.get(DcMotor.class, "motorFR");
-        LiftRight = map.get(DcMotor.class, "LiftRight");
-        LiftLeft = map.get(DcMotor.class, "LiftLeft");
+
         // release = map.get(DcMotor.class, "release");
 
        /* red = map.get(LED.class, "red");
@@ -77,15 +72,13 @@ public class AutonMethods {
         red2 = map.get(LED.class, "red2");
         green2 = map.get(LED.class, "green2");*/
 
-        intake = map.get(Servo.class, "intake");
 
 
         motorFL.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorBL.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorFR.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorBR.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-        LiftLeft.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-        LiftRight.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+
 
         //  release.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -93,20 +86,11 @@ public class AutonMethods {
         motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
         motorFR.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBR.setDirection(DcMotorSimple.Direction.FORWARD);
-        LiftLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        LiftRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        // release.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        LiftLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        LiftRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         motorFL.setTargetPosition(0);
         motorBL.setTargetPosition(0);
         motorFR.setTargetPosition(0);
         motorBR.setTargetPosition(0);
-        LiftLeft.setTargetPosition(0);
-        LiftRight.setTargetPosition(0);
 
         int relativeLayoutId = map.appContext.getResources().getIdentifier("RelativeLayout", "id", map.appContext.getPackageName());
 
@@ -119,9 +103,14 @@ public class AutonMethods {
         motorBL.setPower(0);
         motorBR.setPower(0);
         motorFR.setPower(0);
-        LiftLeft.setPower(0);
-        LiftRight.setPower(0);
 
+    }
+
+    public void teleOpDrive(Gamepad gamepad1){
+        motorFL.setPower(((gamepad1.right_stick_y) - (gamepad1.right_stick_x) + ((gamepad1.left_stick_y)) - (gamepad1.left_stick_x)));
+        motorFR.setPower(-((gamepad1.right_stick_y) + (gamepad1.right_stick_x) + (gamepad1.left_stick_y) + (gamepad1.left_stick_x)));
+        motorBL.setPower(-(-(gamepad1.right_stick_y) + (gamepad1.right_stick_x) - (gamepad1.left_stick_y) - (gamepad1.left_stick_x)));
+        motorBR.setPower((-(gamepad1.right_stick_y) - (gamepad1.right_stick_x) - (gamepad1.left_stick_y) + (gamepad1.left_stick_x)));
     }
 
     public double maps(double x, double in_min, double in_max, double out_min, double out_max) {
@@ -131,6 +120,8 @@ public class AutonMethods {
     //Function to move the robot in any direction
     public void drive(double forward, double sideways, double speed) {
         runtime.reset();
+        forward*=CalebDistanceConstant;
+        sideways*=CalebDistanceConstant;
         while (motorFR.isBusy() || motorFL.isBusy()) {
             if (runtime.seconds() > 2) break;
         }
@@ -165,7 +156,8 @@ public class AutonMethods {
 
 
     //circumscribed robot has a diameter of 21 inches
-    public void turn(double deg) {
+    public void turn(double deg, double speed) {
+        deg *= CalebTurnConstant;
         while (motorFR.isBusy() || motorFL.isBusy()) {
             if (runtime.seconds() > 2) break;
         }
@@ -182,36 +174,11 @@ public class AutonMethods {
         motorBR.setMode(RunMode.RUN_TO_POSITION);
         motorFL.setMode(RunMode.RUN_TO_POSITION);
         motorBL.setMode(RunMode.RUN_TO_POSITION);
-        motorFL.setPower(0.5);
-        motorBL.setPower(0.5);
-        motorFR.setPower(0.5);
-        motorBR.setPower(0.5);
+        motorFL.setPower(speed);
+        motorBL.setPower(speed);
+        motorFR.setPower(speed);
+        motorBR.setPower(speed);
 
-    }
-
-    public void LiftSetPosition(int position) {
-        LiftLeft.setTargetPosition(position);
-        LiftRight.setTargetPosition(position);
-        LiftRight.setMode(RunMode.RUN_TO_POSITION);
-        LiftLeft.setMode(RunMode.RUN_TO_POSITION);
-        LiftLeft.setPower(1);
-        LiftRight.setPower(1);
-    }
-    public void LiftArmSetPosition(int position) {
-        LiftLeft.setTargetPosition(position);
-        LiftRight.setTargetPosition(position);
-        LiftRight.setMode(RunMode.RUN_TO_POSITION);
-        LiftLeft.setMode(RunMode.RUN_TO_POSITION);
-        LiftLeft.setPower(1);
-        LiftRight.setPower(1);
-        double left = maps(LiftLeft.getCurrentPosition(), 0, topLiftEncoder, botL, topL);
-        double right = maps(LiftLeft.getCurrentPosition(), 0, topLiftEncoder, botR, topR);
-        armL.setPosition(left);
-        armR.setPosition(right);
-    }
-    public int LiftGetPosition() {
-        int leftPosition = LiftLeft.getCurrentPosition();
-        return (leftPosition);
     }
 
 //
@@ -230,18 +197,5 @@ public class AutonMethods {
             tele.addLine("Failed Sleep");
             tele.update();
         }
-    }
-    public void lift(double amount) { //moves the 4 bar/lifter
-        // amount = -amount;
-        LiftRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        LiftLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        LiftRight.setTargetPosition((int) amount);
-        LiftLeft.setMode(RunMode.RUN_TO_POSITION);
-        LiftRight.setPower(.6);
-        LiftLeft.setPower(.6);
-    }
-    public void dump()
-    {
-        intake.setPosition(-.25);
     }
 }

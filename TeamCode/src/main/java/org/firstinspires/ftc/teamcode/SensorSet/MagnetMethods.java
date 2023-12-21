@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.SensorSet;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 
 public class MagnetMethods {
 

@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.Components;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.LED;
 
 import org.firstinspires.ftc.teamcode.Odometry.OdometryMethods;
 
 //@TeleOp
-
+@Disabled
 public class LEDTest extends LinearOpMode {
     public static LED red, green, red2, green2, red3, green3, red4, green4;
     private OdometryMethods robot = new OdometryMethods();

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
@@ -10,8 +11,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class AutonMethods{
@@ -24,16 +27,18 @@ public class AutonMethods{
     //Declare and initial variables
     private double rev = 537.7;//revolution of 312 rpm motor , find at https://www.gobilda.com/5202-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-6mm-d-shaft-312-rpm-36mm-gearbox-3-3-5v-encoder/  called encoder resolution
     private double pi = 3.14;
-    private double wheelDiameter = 3.77953;//inch
-    private double robotWidth = 12.75;//inch
-    private double robotLength = 13;//inch
-    private double CalebTurnConstant = .9;
-    private double CalebDistanceConstant = .69;
+    private double  wheelDiameter = 3.77953;//inch
+    private double robotWidth = 14;//inch
+    private double robotLength = 17;//inch
+    private double CalebTurnConstant = 1.54;
+    private double CalebDistanceConstant = 2;
+    private double CalebSideConstant = CalebDistanceConstant*1.11;
+
 
     private double circumscribedDiameter = Math.sqrt(Math.pow(robotLength, 2) + Math.pow(robotWidth, 2));//inch
     private double circumscribedRadius = circumscribedDiameter / 2;//inch
     private double inch = rev / (wheelDiameter * pi);
-    private double feet = inch * 12;
+    public double feet = inch * 12;
     private double rev2 = 2048;//revolution of 435 rpm motor
     private double inch2 = rev2 / (2 * pi);
     private double feet2 = inch2 * 12;
@@ -43,78 +48,90 @@ public class AutonMethods{
     private double topR = 0;
     private double botL = .35;
     private double topL = 0;
-    private double FRtpos, BRtpos, FLtpos, BLtpos;
-    public static DcMotor motorBR, motorBL, motorFL, motorFR, LiftRight, LiftLeft;
-    //public static DcMotor Forwards = intake, Sideways = carousel;
-    public static Servo intake, armL, armR;
-    public static DistanceSensor distanceSensor, distanceSensorBack;
-    // public static LED red, green, red2, green2;
-    public TouchSensor armTouch;
+    public static DcMotor motorBR, motorBL, motorFL, motorFR, BackIntake, MiddleIntake, Lift;
+    public static CRServo IntakeString;
+    public static Servo DropServo;
+    private DistanceSensor LeftDistance, RightDistance;
     private final ElapsedTime runtime = new ElapsedTime();
     public static int Case = 0;
     HardwareMap map;
     Telemetry tele;
-    public static int counter = 0;
+    public int counter = 0;
 
     public static BNO055IMU imu;
     BNO055IMU.Parameters parameters;
     Orientation angles;
 
-    //Initialization
-    public void setIntakePOS(double a) {
-        intake.setPosition(a);
-    }
-
-
-    public void init(HardwareMap map, Telemetry tele, boolean auton) {
+    public void initBasic(HardwareMap map, Telemetry tele) {
+        this.tele = tele;
         motorFL = map.get(DcMotor.class, "motorFL");
         motorBL = map.get(DcMotor.class, "motorBL");
         motorBR = map.get(DcMotor.class, "motorBR");
         motorFR = map.get(DcMotor.class, "motorFR");
-        LiftRight = map.get(DcMotor.class, "LiftRight");
-        LiftLeft = map.get(DcMotor.class, "LiftLeft");
-        // release = map.get(DcMotor.class, "release");
-
-       /* red = map.get(LED.class, "red");
-        green = map.get(LED.class, "green");
-        red2 = map.get(LED.class, "red2");
-        green2 = map.get(LED.class, "green2");*/
-
-        intake = map.get(Servo.class, "intake");
-
 
         motorFL.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorBL.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorFR.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorBR.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-        LiftLeft.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-        LiftRight.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-
-        //  release.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         motorFL.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
         motorFR.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBR.setDirection(DcMotorSimple.Direction.FORWARD);
-        LiftLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        LiftRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        // release.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        LiftLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        LiftRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         motorFL.setTargetPosition(0);
         motorBL.setTargetPosition(0);
         motorFR.setTargetPosition(0);
         motorBR.setTargetPosition(0);
-        LiftLeft.setTargetPosition(0);
-        LiftRight.setTargetPosition(0);
 
         int relativeLayoutId = map.appContext.getResources().getIdentifier("RelativeLayout", "id", map.appContext.getPackageName());
 
-         tele.addData(">", "Gyro Calibrating. Do Not Move!");
-        tele.update();
+    }
+    public void init(HardwareMap map, Telemetry tele, boolean auton) {
+        this.tele = tele;
+        motorFL = map.get(DcMotor.class, "motorFL");
+        motorBL = map.get(DcMotor.class, "motorBL");
+        motorBR = map.get(DcMotor.class, "motorBR");
+        motorFR = map.get(DcMotor.class, "motorFR");
+        BackIntake = map.get(DcMotor.class, "BackIntake");
+        MiddleIntake = map.get(DcMotor.class, "MiddleIntake");
+        Lift = map.get(DcMotor.class, "Lift");
+        IntakeString = map.get(CRServo.class, "IntakeString");
+        DropServo = map.get(Servo.class, "DropServo");
+        LeftDistance = map.get(DistanceSensor.class, "LeftDistance");
+        RightDistance = map.get(DistanceSensor.class, "RightDistance");
+
+
+        motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        MiddleIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        motorFL.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFR.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBR.setDirection(DcMotorSimple.Direction.FORWARD);
+        BackIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+        MiddleIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        Lift.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Lift.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        motorFL.setTargetPosition(0);
+        motorBL.setTargetPosition(0);
+        motorFR.setTargetPosition(0);
+        motorBR.setTargetPosition(0);
+        BackIntake.setTargetPosition(0);
+        MiddleIntake.setTargetPosition(0);
+
+        int relativeLayoutId = map.appContext.getResources().getIdentifier("RelativeLayout", "id", map.appContext.getPackageName());
+
+         this.tele.addData(">", "Gyro Calibrating. Do Not Move!");
+        this.tele.update();
     }
 
     public void kill() {
@@ -122,8 +139,9 @@ public class AutonMethods{
         motorBL.setPower(0);
         motorBR.setPower(0);
         motorFR.setPower(0);
-        LiftLeft.setPower(0);
-        LiftRight.setPower(0);
+        MiddleIntake.setPower(0);
+        BackIntake.setPower(0);
+        Lift.setPower(0);
 
     }
 
@@ -135,7 +153,7 @@ public class AutonMethods{
     public void drive(double forward, double sideways, double speed) {
         runtime.reset();
         forward*=CalebDistanceConstant;
-        sideways*=CalebDistanceConstant;
+        sideways*=(CalebSideConstant);
         while (motorFR.isBusy() || motorFL.isBusy()) {
             if (runtime.seconds() > 2) break;
         }
@@ -144,10 +162,10 @@ public class AutonMethods{
         motorFR.setMode(RunMode.STOP_AND_RESET_ENCODER);
         motorBR.setMode(RunMode.STOP_AND_RESET_ENCODER);
 
-        FRtpos = forward - sideways;
-        BRtpos = forward + sideways;
-        FLtpos = forward + sideways;
-        BLtpos = forward - sideways;
+        double FRtpos = forward - sideways;
+        double BRtpos = forward + sideways;
+        double FLtpos = forward + sideways;
+        double BLtpos = forward - sideways;
 
         motorFL.setTargetPosition(-(int) FLtpos);
         motorBL.setTargetPosition((int) BLtpos);
@@ -161,17 +179,17 @@ public class AutonMethods{
 
         speed(speed);
     }
-    public void speed(double spee) {
-        motorFL.setPower(spee);
-        motorBL.setPower(spee);
-        motorFR.setPower(spee);
-        motorBR.setPower(spee);
+
+    public void speed(double speed) {
+        motorFL.setPower(speed);
+        motorBL.setPower(speed);
+        motorFR.setPower(speed);
+        motorBR.setPower(speed);
     }
 
 
     //circumscribed robot has a diameter of 21 inches
     public void turn(double deg) {
-        deg *= CalebTurnConstant;
         while (motorFR.isBusy() || motorFL.isBusy()) {
             if (runtime.seconds() > 2) break;
         }
@@ -179,7 +197,8 @@ public class AutonMethods{
         motorBL.setMode(RunMode.STOP_AND_RESET_ENCODER);
         motorBR.setMode(RunMode.STOP_AND_RESET_ENCODER);
         motorFR.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        double deltaturn = (deg / 360.0) * circumscribedDiameter * pi * inch;
+        double deltaturn = (deg / 360) * 7750;
+
         motorFL.setTargetPosition(-(int) deltaturn);
         motorBL.setTargetPosition((int) deltaturn);
         motorFR.setTargetPosition((int) deltaturn);
@@ -195,38 +214,85 @@ public class AutonMethods{
 
     }
 
-    public void LiftSetPosition(int position) {
-        LiftLeft.setTargetPosition(position);
-        LiftRight.setTargetPosition(position);
-        LiftRight.setMode(RunMode.RUN_TO_POSITION);
-        LiftLeft.setMode(RunMode.RUN_TO_POSITION);
-        LiftLeft.setPower(1);
-        LiftRight.setPower(1);
+    public void DropSetPosition(double deg) {
+        DropServo.setPosition(deg);
     }
-    public void LiftArmSetPosition(int position) {
-        LiftLeft.setTargetPosition(position);
-        LiftRight.setTargetPosition(position);
-        LiftRight.setMode(RunMode.RUN_TO_POSITION);
-        LiftLeft.setMode(RunMode.RUN_TO_POSITION);
-        LiftLeft.setPower(1);
-        LiftRight.setPower(1);
-        double left = maps(LiftLeft.getCurrentPosition(), 0, topLiftEncoder, botL, topL);
-        double right = maps(LiftLeft.getCurrentPosition(), 0, topLiftEncoder, botR, topR);
-        armL.setPosition(left);
-        armR.setPosition(right);
+
+    public double GetLeftDistance(){
+        return LeftDistance.getDistance(DistanceUnit.CM);
     }
-    public int LiftGetPosition() {
-        int leftPosition = LiftLeft.getCurrentPosition();
-        return (leftPosition);
+
+    public double GetRightDistance(){
+        return RightDistance.getDistance(DistanceUnit.CM);
     }
+
+
+    public void LiftSetPosition(int targetPosition) {
+        if (tele == null) {
+            throw new IllegalStateException("Telemetry is not initialized.");
+        }
+
+        int errorMargin = 10; // Acceptable range to consider the target reached
+
+        // Basic motor setup
+        Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        int currentPosition = Lift.getCurrentPosition(); // Get the current position
+        tele.addData("Current Position", currentPosition);
+        tele.addData("Target Position", targetPosition);
+        tele.update();
+
+        // Calculate the direction to move
+        int direction = targetPosition > currentPosition ? 1 : -1;
+        // Set a constant power level for movement (adjust as necessary)
+        double power = -0.006 * direction;
+
+
+        while (Math.abs(Lift.getCurrentPosition() - targetPosition) > errorMargin) {
+            if(Math.abs(Lift.getCurrentPosition())>Math.abs(targetPosition)){
+                Lift.setPower(0);
+                return;
+            }
+            Lift.setPower(power);
+
+            // Update telemetry
+            tele.addData("Current Position", Lift.getCurrentPosition());
+            tele.addData("Target Position", targetPosition);
+            tele.addData("Motor Power", power);
+            tele.update();
+
+            // Optional delay for telemetry update
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+
+        // Stop the motor once the target is reached
+        Lift.setPower(0);
+        tele.addData("Status", "Target Reached");
+        tele.update();
+    }
+
+
+
+
+
+
+
+
+    public void IntakeString(double speed) {
+        IntakeString.setPower(speed);
+    }
+    public void MiddleIntakeSpeed(double speed){
+        MiddleIntake.setPower(-1*speed);
+    }
+
 
 //
 
-    public void newSleep(double timeinSeconds) {
-        runtime.reset();
-        while (runtime.seconds() < timeinSeconds) ;
-//do nothing
-    }
 
     //Function to have the robot sleep
     public void sleep(long sleep) {
@@ -237,17 +303,6 @@ public class AutonMethods{
             tele.update();
         }
     }
-    public void lift(double amount) { //moves the 4 bar/lifter
-        // amount = -amount;
-        LiftRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        LiftLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        LiftRight.setTargetPosition((int) amount);
-        LiftLeft.setMode(RunMode.RUN_TO_POSITION);
-        LiftRight.setPower(.6);
-        LiftLeft.setPower(.6);
-    }
-    public void dump()
-    {
-        intake.setPosition(-.25);
-    }
+
+
 }

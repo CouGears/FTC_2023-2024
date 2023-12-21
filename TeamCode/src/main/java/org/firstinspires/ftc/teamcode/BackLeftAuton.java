@@ -27,7 +27,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 //test
-package org.firstinspires.ftc.teamcode.Old_2022_2023;
+package org.firstinspires.ftc.teamcode;
+
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -35,13 +36,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.AutonMethods;
+//This auton is for Red Board Side
 
-
-//uncomment the following line to use
 @Autonomous
-
-public class Calebs_Auton extends OpMode {
+public class BackLeftAuton extends OpMode {
 
     //TensorFlowVision vision = new TensorFlowVision();
 //   double rev = 383.6; //435 rpm motor
@@ -49,18 +47,24 @@ public class Calebs_Auton extends OpMode {
     double inch = rev / (3.78 * 3.14);
     double feet = inch * 12 + (10 * inch);
     short sleevenum = 1;
+    private double frontdistance = 0;
+    private double middledistance = 0;
+    private double backdistance = 0;
+
 
     private ElapsedTime runtime = new ElapsedTime();
     AutonMethods robot = new AutonMethods();
     HardwareMap map;
-    Telemetry tele;
+    Telemetry tele = telemetry;
 
     @Override
+
     public void init() {
 
-        robot.init(hardwareMap, telemetry, false);
+        robot.init(hardwareMap, tele, false);
+        robot.DropSetPosition(.045);
 
-        telemetry.addData("Status", "Initialized");
+        tele.addData("Status", "Initialized");
 
     }
 
@@ -77,110 +81,98 @@ public class Calebs_Auton extends OpMode {
     public void loop() {
         switch (robot.counter) {
             case 0:
-                //Close claw
-                robot.setIntakePOS(0);
+                robot.DropSetPosition(.045);
                 robot.counter++;
                 break;
             case 1:
-                //Move towards high pole
-                robot.drive(4*feet, 0*feet, .25);
+                robot.drive(0, 4*inch, .5);
                 robot.counter++;
                 break;
             case 2:
-                //turn towards high pole
-                robot.turn(45);
+                robot.drive(2*feet, 0, .5);
                 robot.counter++;
                 break;
+
             case 3:
-                //raise arm(Encoder)
-                robot.LiftArmSetPosition(7475);// this is most definetly incorrect
+                robot.drive(0, 2.5*feet, .5);
                 robot.counter++;
                 break;
             case 4:
-                //move robot a little forward
-                robot.drive(.5*feet, 0*feet, .25);
+                robot.drive(4*feet+9*inch, -0*feet, .5);
                 robot.counter++;
                 break;
             case 5:
-                //lower arm a little tiny bit
-                robot.LiftArmSetPosition(5000);// this is most definetly incorrect
+                robot.LiftSetPosition(-1380);//idk ill have to like do some fancy shmancy stuff to see if this is right
                 robot.counter++;
                 break;
             case 6:
-                //open claw
-                robot.setIntakePOS(1);
+                robot.DropSetPosition(.35);
                 robot.counter++;
                 break;
             case 7:
-                //lower arm a little tiny bit
-                robot.LiftArmSetPosition(7475);// this is most definetly incorrect
+                robot.sleep(1000);
+                robot.drive(-4*inch, -0*feet, .5);
                 robot.counter++;
+                break;
             case 8:
-                //move a little tiny bit back
-                robot.drive(-.5*feet, 0*feet, .25);
+                robot.DropSetPosition(.045);
                 robot.counter++;
                 break;
             case 9:
-                //lower arm a little tiny bit
-                robot.LiftArmSetPosition(2000);// this is most definetly incorrect
+                //robot.LiftSetPosition(0);
                 robot.counter++;
+                break;
             case 10:
-                //turn to cones
-                robot.turn(-135);
+                //robot.MiddleIntakeSpeed(1);
                 robot.counter++;
                 break;
             case 11:
-                //go to cones
-                robot.drive(1*feet, 0*feet, .25);
+                //robot.sleep(1000);
                 robot.counter++;
                 break;
             case 12:
-                //lower arm a little tiny bit
-                robot.LiftArmSetPosition(0);// this is most definetly incorrect
+                //robot.MiddleIntakeSpeed(0);
                 robot.counter++;
+                break;
             case 13:
-                //pick up cones
-                robot.setIntakePOS(0);
+                //robot.LiftSetPosition(-1380);//idk ill have to like do some fancy shmancy stuff to see if this is right
                 robot.counter++;
                 break;
             case 14:
-                //lower arm a little tiny bit
-                robot.LiftArmSetPosition(2000);// this is most definetly incorrect
+                //robot.DropSetPosition(.3);
                 robot.counter++;
+                break;
             case 15:
-                //return to high pole
-                robot.drive(-1*feet, 0*feet, .25);
+                //robot.sleep(1000);
                 robot.counter++;
                 break;
             case 16:
-                //turn to high pole
-                robot.turn(135);
+                //robot.DropSetPosition(.25);
                 robot.counter++;
                 break;
             case 17:
-                //raise arm(Encoder)
-                robot.LiftArmSetPosition(7475);// this is most definetly incorrect
+                //robot.LiftSetPosition(0);
                 robot.counter++;
                 break;
             case 18:
-                //move robot a little forward
-                robot.drive(.5*feet, 0*feet, .25);
                 robot.counter++;
                 break;
             case 19:
-                //lower arm a little tiny bit
-                robot.LiftArmSetPosition(5000);// this is most definetly incorrect
                 robot.counter++;
                 break;
             case 20:
-                //open claw
-                robot.setIntakePOS(1);
+                robot.IntakeString(1);
                 robot.counter++;
                 break;
             case 21:
-
+                robot.sleep(1000);
                 robot.counter++;
                 break;
+            case 22:
+                robot.IntakeString(0);
+                robot.counter++;
+                break;
+
 
         }
     }
