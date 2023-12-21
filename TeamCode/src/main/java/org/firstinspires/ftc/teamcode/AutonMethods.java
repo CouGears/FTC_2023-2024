@@ -83,6 +83,9 @@ public class AutonMethods{
         motorBL.setTargetPosition(0);
         motorFR.setTargetPosition(0);
         motorBR.setTargetPosition(0);
+
+        int relativeLayoutId = map.appContext.getResources().getIdentifier("RelativeLayout", "id", map.appContext.getPackageName());
+
     }
     public void init(HardwareMap map, Telemetry tele, boolean auton) {
         this.tele = tele;

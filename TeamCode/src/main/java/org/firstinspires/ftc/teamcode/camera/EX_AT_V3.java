@@ -6,7 +6,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
@@ -32,10 +36,10 @@ public class EX_AT_V3 extends LinearOpMode {
     //-----------------------------NO TOUCH VARS >:(-----------------------------
     final double DESIRED_DISTANCE = 5.0; //  this is how close the camera should get to the target (inches)
 
-    private DcMotor motorFL = null;  //  Used to control the left front drive wheel
-    private DcMotor motorFR = null;  //  Used to control the right front drive wheel
-    private DcMotor motorBL = null;  //  Used to control the left back drive wheel
-    private DcMotor motorBR = null;  //  Used to control the right back drive wheel
+    private DcMotor motorFL;  //  Used to control the left front drive wheel
+    private DcMotor motorFR;  //  Used to control the right front drive wheel
+    private DcMotor motorBL;  //  Used to control the left back drive wheel
+    private DcMotor motorBR;  //  Used to control the right back drive wheel
     //
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
@@ -49,13 +53,17 @@ public class EX_AT_V3 extends LinearOpMode {
     double rev = 537.7; //312 rpm motor
     double inch = rev / (3.78 * 3.14);
     double feet = inch * 12 + (10 * inch);
-
+    int attempt = 0;
+    private ElapsedTime runtime = new ElapsedTime();
+    HardwareMap map;
+    Telemetry tele;
 
     @Override
     public void runOpMode() {
 
         //*****************************INIT***************************** (WORKS)
         boolean targetFound = false;    // Set to true when an AprilTag target is detected
+        robot.initBasic(hardwareMap, telemetry);
         initAprilTag();
         hardwareSetup();
         setManualExposure(6, 250);
@@ -69,7 +77,6 @@ public class EX_AT_V3 extends LinearOpMode {
         //*****************************OP-MODE*****************************
         //-----------------------------CHOOSE ATTEMPT----------------------------- (WORKS)
         while (opModeIsActive()) {
-            int attempt = 0;
             while (attempt == 0){
                 if (gamepad1.a){ attempt = 1;}
                 telemetry.addData("a = ", "All at once (just AT data)");
@@ -99,6 +106,9 @@ public class EX_AT_V3 extends LinearOpMode {
             if (targetFound) {
                 telemetry.addData(">", "HOLD Left-Bumper to Drive to Target\n");
                 telemetry.addData("Target", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
+                telemetry.addData(">", "Range %d", desiredTag.ftcPose.range);
+                telemetry.addData(">", "Bearing %d", desiredTag.ftcPose.bearing);
+
             } else {
                 telemetry.addData(">", "Drive using joysticks to find valid target\n");
             }
@@ -165,8 +175,8 @@ public class EX_AT_V3 extends LinearOpMode {
                     }
                     double forward = sqrt(Math.pow(desiredTag.ftcPose.range, 2) - Math.pow(strafe, 2)); //BC = sqrt(AB^2 - AC^2)
                     telemetry.addData(">", "ATTEMPT 2");
-                    telemetry.addData("FWD = %3f", forward);
-                    telemetry.addData("STRAFE = %3f", strafe);
+                    telemetry.addData("FWD = %d", forward);
+                    telemetry.addData("STRAFE = %d", strafe);
                     robot.drive(forward * inch, strafe * inch, .5);
                     robot.drive(0, 7 * inch, .5); // STRAFE B/C CAMERA IS ON LEFT AND DROPPER IS RIGHT (*COULD BE -7, I DONT REMEMBER*)
                 }
