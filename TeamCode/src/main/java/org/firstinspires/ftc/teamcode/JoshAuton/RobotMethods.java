@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class RobotMethods {
 
@@ -172,7 +173,6 @@ public class RobotMethods {
         wheelSpeed(0.0);
         wheelMode(0);
         wheelTarget(0.0);
-        motorFL.isBusy();
     }
 
     public boolean wheelsBusy() {
@@ -183,12 +183,58 @@ public class RobotMethods {
         }
     }
 
+    public boolean motorsBusy() {
+        if (wheelsBusy() || BackIntake.isBusy() || MiddleIntake.isBusy() || Lift.isBusy()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean returnAfterBusy() {
         while (true) {
-            if (!wheelsBusy()) {
+            if (!motorsBusy()) {
                 return true;
             }
         }
+    }
+
+    public double getDistance(int sensor) {
+        switch (sensor) {
+            case 0:
+                return LeftDistance.getDistance(DistanceUnit.INCH);
+            case 1:
+                return RightDistance.getDistance(DistanceUnit.INCH);
+            default:
+                return 0.0;
+        }
+    }
+
+    public double getLift() {
+        return Lift.getCurrentPosition();
+    }
+
+    public double getDrop() {
+        return DropServo.getPosition();
+    }
+
+    public void moveLift(int target, double pwr, Telemetry tele) {
+        Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        while (Math.abs(target-getLift()) > 10) {
+            if (target > getLift()) {
+                Lift.setPower(-pwr);
+            } else if (target < getLift()) {
+                Lift.setPower(pwr);
+            }
+            tele.addLine("Lift: " + getLift());
+            tele.update();
+        }
+        Lift.setPower(0);
+    }
+
+    public void middle(double power) {
+        MiddleIntake.setPower(power);
     }
 
 }
