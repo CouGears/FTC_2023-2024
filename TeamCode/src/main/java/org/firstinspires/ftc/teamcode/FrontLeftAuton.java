@@ -98,7 +98,7 @@ public class FrontLeftAuton extends OpMode {
                 robot.counter++;
                 break;
             case 4:
-                robot.drive(9*inch, 0*feet, .5);
+                robot.drive(11*inch, 0*feet, .5);
                 robot.counter++;
                 break;
             case 5:
@@ -119,7 +119,7 @@ public class FrontLeftAuton extends OpMode {
                 robot.counter++;
                 break;
             case 9:
-                //robot.LiftSetPosition(0);
+                robot.turn(180);
                 robot.counter++;
                 break;
             case 10:
@@ -155,11 +155,11 @@ public class FrontLeftAuton extends OpMode {
                 robot.counter++;
                 break;
             case 18:
-                robot.drive(0, -2*feet, .5);
+                robot.drive(0, 2*feet, .5);
                 robot.counter++;
                 break;
             case 19:
-                robot.drive(.5*feet, 0, .5);
+                robot.drive(-.5*feet, 0, .5);
                 robot.counter++;
                 break;
             case 20:

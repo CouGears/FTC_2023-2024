@@ -89,7 +89,7 @@ public class BackLeftAuton extends OpMode {
                 robot.counter++;
                 break;
             case 2:
-                robot.drive(2*feet, 0, .5);
+                robot.drive(4*feet+2*inch, 0, .5);
                 robot.counter++;
                 break;
 
@@ -98,7 +98,7 @@ public class BackLeftAuton extends OpMode {
                 robot.counter++;
                 break;
             case 4:
-                robot.drive(4*feet+9*inch, -0*feet, .5);
+                robot.drive(2*feet+9*inch, -0*feet, .5);
                 robot.counter++;
                 break;
             case 5:

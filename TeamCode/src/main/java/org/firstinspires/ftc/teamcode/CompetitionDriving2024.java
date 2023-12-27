@@ -67,7 +67,7 @@ public class CompetitionDriving2024 extends LinearOpMode {
         MiddleIntake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         Lift = hardwareMap.get(DcMotor.class, "Lift");
-        Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Lift.setDirection(DcMotorSimple.Direction.REVERSE);
 

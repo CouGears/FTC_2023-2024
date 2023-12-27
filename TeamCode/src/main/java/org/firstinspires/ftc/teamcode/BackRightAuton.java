@@ -89,7 +89,7 @@ public class BackRightAuton extends OpMode {
                 robot.counter++;
                 break;
             case 2:
-                robot.drive(2*feet, 0, .5);
+                robot.drive(6*feet+9*inch,0,1);
                 robot.counter++;
                 break;
 
@@ -98,8 +98,9 @@ public class BackRightAuton extends OpMode {
                 robot.counter++;
                 break;
             case 4:
-                robot.drive(4*feet+9*inch, -0*feet, .5);
+                robot.drive(1*feet+9*inch,-0*feet, .5);
                 robot.counter++;
+
                 break;
             case 5:
                 robot.LiftSetPosition(-1380);//idk ill have to like do some fancy shmancy stuff to see if this is right
