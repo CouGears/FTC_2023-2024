@@ -84,7 +84,7 @@ public class CompetitionDriving2024 extends LinearOpMode {
                 speed = .66;
             }
             if (gamepad1.dpad_left) {
-                DropServo.setPosition(.35);
+                DropServo.setPosition(.5);
             }
             else{
                 DropServo.setPosition(.045);

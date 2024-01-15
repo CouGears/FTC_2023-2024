@@ -33,7 +33,8 @@ public class RobotMethods {
     public static DcMotor motorBR, motorBL, motorFL, motorFR, BackIntake, MiddleIntake, Lift;
     public static CRServo IntakeString;
     public static Servo DropServo;
-    private DistanceSensor LeftDistance, RightDistance;
+    //private DistanceSensor LeftDistance, RightDistance;
+    public static DistanceSensor BackdropDistance;
 
     public void init(HardwareMap map, Telemetry tele) {
         motorFL = map.get(DcMotor.class, "motorFL");
@@ -45,8 +46,9 @@ public class RobotMethods {
         Lift = map.get(DcMotor.class, "Lift");
         IntakeString = map.get(CRServo.class, "IntakeString");
         DropServo = map.get(Servo.class, "DropServo");
-        LeftDistance = map.get(DistanceSensor.class, "LeftDistance");
-        RightDistance = map.get(DistanceSensor.class, "RightDistance");
+        //LeftDistance = map.get(DistanceSensor.class, "LeftDistance");
+        //RightDistance = map.get(DistanceSensor.class, "RightDistance");
+        BackdropDistance = map.get(DistanceSensor.class, "BackdropDistance");
 
         motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -71,6 +73,8 @@ public class RobotMethods {
         BackIntake.setTargetPosition(0);
         MiddleIntake.setTargetPosition(0);
         Lift.setTargetPosition(0);
+
+        DropServo.setPosition(.045);
     }
 
     public void drive(double fwd, double side, double speed) {
@@ -79,26 +83,31 @@ public class RobotMethods {
         fwd *= fwdErrorCorrection;
         side *= sideErrorCorrection;
 
-        double fwd2 = fwd * fwd;
-        double side2 = side * side;
+//        double fwd2 = fwd * fwd;
+//        double side2 = side * side;
+//
+//        double FRtarget = Math.sqrt(Math.abs(fwd2 - side2));
+//        double BRtarget = Math.sqrt(Math.abs(fwd2 + side2));
+//        double FLtarget = Math.sqrt(Math.abs(-fwd2 - side2));
+//        double BLtarget = Math.sqrt(Math.abs(-fwd2 + side2));
 
-        double FRtarget = Math.sqrt(Math.abs(fwd2 - side2));
-        double BRtarget = Math.sqrt(Math.abs(fwd2 + side2));
-        double FLtarget = Math.sqrt(Math.abs(-fwd2 - side2));
-        double BLtarget = Math.sqrt(Math.abs(-fwd2 + side2));
+//        if (fwd - side < 0) {
+//            FRtarget *= -1;
+//        }
+//        if (fwd + side < 0) {
+//            BRtarget *= -1;
+//        }
+//        if (-fwd - side < 0) {
+//            FLtarget *= -1;
+//        }
+//        if (-fwd + side < 0) {
+//            BLtarget *= -1;
+//        }
 
-        if (fwd - side < 0) {
-            FRtarget *= -1;
-        }
-        if (fwd + side < 0) {
-            BRtarget *= -1;
-        }
-        if (-fwd - side < 0) {
-            FLtarget *= -1;
-        }
-        if (-fwd + side < 0) {
-            BLtarget *= -1;
-        }
+        double FRtarget = fwd - side;
+        double BRtarget = fwd + side;
+        double FLtarget = -fwd - side;
+        double BLtarget = -fwd + side;
 
         double FRspeed = speed, BRspeed = speed, FLspeed = speed, BLspeed = speed;
         if (Math.abs(FRtarget) > Math.abs(FLtarget)) {
@@ -199,16 +208,16 @@ public class RobotMethods {
         }
     }
 
-    public double getDistance(int sensor) {
-        switch (sensor) {
-            case 0:
-                return LeftDistance.getDistance(DistanceUnit.INCH);
-            case 1:
-                return RightDistance.getDistance(DistanceUnit.INCH);
-            default:
-                return 0.0;
-        }
-    }
+//    public double getDistance(int sensor) {
+//        switch (sensor) {
+//            case 0:
+//                return LeftDistance.getDistance(DistanceUnit.INCH);
+//            case 1:
+//                return RightDistance.getDistance(DistanceUnit.INCH);
+//            default:
+//                return 0.0;
+//        }
+//    }
 
     public double getLift() {
         return Lift.getCurrentPosition();
@@ -236,5 +245,18 @@ public class RobotMethods {
     public void middle(double power) {
         MiddleIntake.setPower(power);
     }
+
+    public void setDropServo(double pos) {
+        DropServo.setPosition(pos);
+    }
+
+    public void backIntake(double power) {
+        BackIntake.setPower(power);
+    }
+
+    public double getBackdropDistance() {
+        return BackdropDistance.getDistance(DistanceUnit.INCH);
+    }
+
 
 }
