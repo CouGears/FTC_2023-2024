@@ -20,7 +20,7 @@ public class Auton_BlueWing extends OpMode {
 
     // tfod
     private static final boolean USE_WEBCAM = true;
-    private static final String TFOD_MODEL_ASSET = "Red_and_Blue_Marker_Models.tflite";
+    private static final String TFOD_MODEL_ASSET = "PropModel.tflite";
     private static final String[] LABELS = { "Blue Marker", "Red Marker" };
 
     private TfodProcessor tfod;
@@ -49,7 +49,7 @@ public class Auton_BlueWing extends OpMode {
         double dist;
         switch (pos) {
             case "left":
-                robot.drive(0, 32, 1);
+                robot.drive(0, 28, 1);
                 robot.returnAfterBusy();
                 robot.drive(6, 0, 1);
                 robot.returnAfterBusy();
@@ -60,7 +60,7 @@ public class Auton_BlueWing extends OpMode {
                 robot.middle(0);
                 break;
             case "middle":
-                robot.drive(0, 34, 1);
+                robot.drive(0, 32, 1);
                 robot.returnAfterBusy();
                 robot.turn(90, 1);
                 robot.returnAfterBusy();
@@ -71,7 +71,7 @@ public class Auton_BlueWing extends OpMode {
                 robot.middle(0);
                 break;
             case "right":
-                robot.drive(0, 32, 1);
+                robot.drive(0, 28, 1);
                 robot.returnAfterBusy();
                 robot.turn(180, 1);
                 robot.returnAfterBusy();

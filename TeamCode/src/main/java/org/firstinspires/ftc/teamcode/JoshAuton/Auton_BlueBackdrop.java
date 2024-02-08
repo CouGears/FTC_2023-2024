@@ -16,11 +16,12 @@ import java.util.List;
 @Autonomous
 public class Auton_BlueBackdrop extends OpMode {
 
+    // initialize new instance of robot
     RobotMethods robot = new RobotMethods();
 
     // tfod
     private static final boolean USE_WEBCAM = true;
-    private static final String TFOD_MODEL_ASSET = "Red_and_Blue_Marker_Models.tflite";
+    private static final String TFOD_MODEL_ASSET = "PropModel.tflite";
     private static final String[] LABELS = { "Blue Marker", "Red Marker" };
 
     private TfodProcessor tfod;
