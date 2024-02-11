@@ -13,14 +13,14 @@ import org.firstinspires.ftc.teamcode.SensorSet.LEDMethods;
 @TeleOp
 public class CompetitionDriving2024 extends LinearOpMode {
 
-    public static DcMotor motorBR, motorBL, motorFL, motorFR, BackIntake, MiddleIntake, Lift;
+    public static DcMotor motorBR, motorBL, motorFL, motorFR, BackIntake, MiddleIntake, Lift, PullUp;
     public static CRServo IntakeString;
     public static Servo DropServo, AirplaneLaunch;
     private AutonMethods robot = new AutonMethods();
     public int driveswitch = 1;
 
     public int intakemode = 0;
-    private int liftLimit = -3000;
+    private int liftLimit = 3000;
 
     public void TelemetryUpdate() {
         telemetry.addData("Drive Mode", driveswitch);
@@ -34,6 +34,8 @@ public class CompetitionDriving2024 extends LinearOpMode {
         telemetry.addData("Drop Servo Pos = ", DropServo.getPosition());
         telemetry.addLine();
         telemetry.addData("Airplane Launch Pos = ", AirplaneLaunch.getPosition());
+        telemetry.addLine();
+        telemetry.addData("PullUp Pos = ", PullUp.getCurrentPosition());
         telemetry.update();
     }
     @Override
@@ -49,6 +51,7 @@ public class CompetitionDriving2024 extends LinearOpMode {
         IntakeString = hardwareMap.get(CRServo.class, "IntakeString");
         DropServo = hardwareMap.get(Servo.class, "DropServo");
         AirplaneLaunch = hardwareMap.get(Servo.class, "AirplaneLaunch");
+        PullUp = hardwareMap.get(DcMotor.class, "PullUp");
 
         motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -57,6 +60,7 @@ public class CompetitionDriving2024 extends LinearOpMode {
         BackIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         MiddleIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        PullUp.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         motorFL.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -65,11 +69,12 @@ public class CompetitionDriving2024 extends LinearOpMode {
         motorBR.setDirection(DcMotorSimple.Direction.FORWARD);
         BackIntake.setDirection(DcMotorSimple.Direction.REVERSE);
         MiddleIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+        PullUp.setDirection(DcMotorSimple.Direction.FORWARD);
 
         Lift = hardwareMap.get(DcMotor.class, "Lift");
         //Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Lift.setDirection(DcMotorSimple.Direction.REVERSE);
+        Lift.setDirection(DcMotorSimple.Direction.FORWARD);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -123,6 +128,17 @@ public class CompetitionDriving2024 extends LinearOpMode {
                 MiddleIntake.setPower(0);
                 BackIntake.setPower(0);
             }
+            if (gamepad1.left_stick_button) {
+                // Control to pull up
+                PullUp.setPower(1.0);
+            } else if (gamepad1.right_stick_button) {
+                // Control to release down
+                PullUp.setPower(-1.0);
+            } else{
+                // Ensure the motor stops if no buttons are pressed and not in active mode
+                PullUp.setPower(0);
+            }
+
 
 
             motorFL.setPower(((this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) + ((this.gamepad1.left_stick_y)) - (this.gamepad1.left_stick_x)) * speed);
@@ -141,10 +157,10 @@ public class CompetitionDriving2024 extends LinearOpMode {
             }
 
             //LIFT
-            if ((gamepad1.dpad_up && Lift.getCurrentPosition() >= liftLimit) || (gamepad1.dpad_up && gamepad1.dpad_right)) {
-                Lift.setPower(.1);
-            } else if ((gamepad1.dpad_down && Lift.getCurrentPosition() <= 0) || (gamepad1.dpad_down && gamepad1.dpad_right)){ //At 500 b/c motor will overspin w/ momentum and end up <0
-                Lift.setPower(-.1);
+            if ((gamepad1.dpad_up && Lift.getCurrentPosition() <= liftLimit) || (gamepad1.dpad_up && gamepad1.dpad_right)) {
+                Lift.setPower(.25);
+            } else if ((gamepad1.dpad_down && Lift.getCurrentPosition() >= 0) || (gamepad1.dpad_down && gamepad1.dpad_right)){ //At 500 b/c motor will overspin w/ momentum and end up <0
+                Lift.setPower(-.25);
             } else {
                 Lift.setPower(0);
             }

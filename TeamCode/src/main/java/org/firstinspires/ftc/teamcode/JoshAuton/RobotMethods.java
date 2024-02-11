@@ -64,7 +64,7 @@ public class RobotMethods {
         motorBR.setDirection(DcMotorSimple.Direction.FORWARD);
         BackIntake.setDirection(DcMotorSimple.Direction.FORWARD);
         MiddleIntake.setDirection(DcMotorSimple.Direction.FORWARD);
-        Lift.setDirection(DcMotorSimple.Direction.FORWARD);
+        Lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
         motorFL.setTargetPosition(0);
         motorBL.setTargetPosition(0);
@@ -220,7 +220,7 @@ public class RobotMethods {
 //    }
 
     public double getLift() {
-        return Lift.getCurrentPosition();
+        return -Lift.getCurrentPosition();
     }
 
     public double getDrop() {
