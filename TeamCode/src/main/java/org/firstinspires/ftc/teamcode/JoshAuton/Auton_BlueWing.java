@@ -20,7 +20,7 @@ public class Auton_BlueWing extends OpMode {
 
     // tfod
     private static final boolean USE_WEBCAM = true;
-    private static final String TFOD_MODEL_ASSET = "PropModel.tflite";
+    private static final String TFOD_MODEL_ASSET = "OldPropModel.tflite";
     private static final String[] LABELS = { "Blue Marker", "Red Marker" };
 
     private TfodProcessor tfod;
@@ -55,7 +55,7 @@ public class Auton_BlueWing extends OpMode {
                 robot.returnAfterBusy();
                 robot.moveLift(1000, 1, telemetry);
                 robot.returnAfterBusy();
-                robot.middle(0.5);
+                robot.middle(1);
                 sleep(1000);
                 robot.middle(0);
                 break;
@@ -79,7 +79,7 @@ public class Auton_BlueWing extends OpMode {
                 robot.returnAfterBusy();
                 robot.moveLift(1000, 1, telemetry);
                 robot.returnAfterBusy();
-                robot.middle(0.5);
+                robot.middle(1);
                 sleep(1000);
                 robot.middle(0);
                 break;
@@ -153,7 +153,7 @@ public class Auton_BlueWing extends OpMode {
         visionPortal = builder.build();
 
         // Set confidence threshold for TFOD recognitions, at any time.
-        tfod.setMinResultConfidence(0.35f);
+        tfod.setMinResultConfidence(0.4f);
 
         // Disable or re-enable the TFOD processor at any time.
         visionPortal.setProcessorEnabled(tfod, true);
