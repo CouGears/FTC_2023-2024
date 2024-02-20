@@ -20,7 +20,7 @@ public class Auton_BlueWing extends OpMode {
 
     // tfod
     private static final boolean USE_WEBCAM = true;
-    private static final String TFOD_MODEL_ASSET = "Model4.tflite";
+    private static final String TFOD_MODEL_ASSET = "OldPropModel.tflite";
     private static final String[] LABELS = { "Blue Marker", "Red Marker" };
 
     private TfodProcessor tfod;
