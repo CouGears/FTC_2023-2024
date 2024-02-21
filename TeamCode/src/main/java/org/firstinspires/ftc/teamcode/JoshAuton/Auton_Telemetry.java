@@ -14,8 +14,9 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import java.util.List;
 
 @Autonomous
-public class Auton_RedBackdrop extends OpMode {
+public class Auton_Telemetry extends OpMode {
 
+    // initialize new instance of robot
     RobotMethods robot = new RobotMethods();
 
     // tfod
@@ -35,120 +36,13 @@ public class Auton_RedBackdrop extends OpMode {
 
     @Override
     public void start() {
-        String pos = "right";
-
-        int i = 0;
-        while (i < 300 && pos.equals("right")) {
-            pos = detectProp();
-            telemetry.update();
-            sleep(20);
-            i++;
-        }
-
-
-        double dist;
-        switch (pos) {
-            case "left":
-                robot.drive(0, 32, 1);
-                robot.returnAfterBusy();
-                robot.drive(9, 0, 1);
-                robot.returnAfterBusy();
-                robot.moveLift(1000, 1, telemetry);
-                robot.returnAfterBusy();
-                robot.middle(0.5);
-                sleep(1000);
-                robot.middle(0);
-                robot.drive(-10, 0, 1);
-                robot.returnAfterBusy();
-                robot.turn(180, 1);
-                robot.returnAfterBusy();
-                robot.drive(25, 0, 1);
-                robot.returnAfterBusy();
-                robot.drive(10, 0, 0.2);
-                dist = robot.getBackdropDistance();
-                while (dist > 3.5) {
-                    dist = robot.getBackdropDistance();
-                }
-                robot.stopWheels();
-                robot.setDropServo(.5);
-                sleep(1000);
-                robot.drive(-4, 0, 0.5);
-                robot.returnAfterBusy();
-                robot.setDropServo(0.045);
-                robot.drive(0, 30, 1);
-                robot.returnAfterBusy();
-                robot.drive(12, 0, 1);
-                robot.returnAfterBusy();
-                break;
-            case "middle":
-                robot.drive(0, 32, 1);
-                robot.returnAfterBusy();
-                robot.turn(90, 1);
-                robot.returnAfterBusy();
-                robot.moveLift(1000, 1, telemetry);
-                robot.returnAfterBusy();
-                robot.middle(1);
-                sleep(1000);
-                robot.middle(0);
-                robot.drive(-6, 0, 1);
-                robot.returnAfterBusy();
-                robot.turn(90, 1);
-                robot.returnAfterBusy();
-                robot.drive(26, 0, 1);
-                robot.returnAfterBusy();
-                robot.drive(10, 0, 0.2);
-                dist = robot.getBackdropDistance();
-                while (dist > 3.5) {
-                    dist = robot.getBackdropDistance();
-                }
-                robot.stopWheels();
-                robot.setDropServo(.5);
-                sleep(1000);
-                robot.drive(-4, 0, 0.5);
-                robot.returnAfterBusy();
-                robot.setDropServo(0.045);
-                robot.drive(0, 22, 1);
-                robot.returnAfterBusy();
-                robot.drive(12, 0, 1);
-                robot.returnAfterBusy();
-                break;
-            case "right":
-                robot.drive(0, 32, 1);
-                robot.returnAfterBusy();
-                robot.turn(180, 1);
-                robot.returnAfterBusy();
-                robot.drive(6, 0, 1);
-                robot.returnAfterBusy();
-                robot.moveLift(1000, 1, telemetry);
-                robot.returnAfterBusy();
-                robot.middle(0.5);
-                sleep(1000);
-                robot.middle(0);
-                robot.drive(12, -12, 1);
-                robot.returnAfterBusy();
-                robot.drive(12, 24, 1);
-                robot.returnAfterBusy();
-                robot.drive(10, 0, 0.2);
-                dist = robot.getBackdropDistance();
-                while (dist > 3.5) {
-                    dist = robot.getBackdropDistance();
-                }
-                robot.stopWheels();
-                robot.setDropServo(.5);
-                sleep(1000);
-                robot.drive(-4, 0, 0.5);
-                robot.returnAfterBusy();
-                robot.setDropServo(0.045);
-                robot.drive(0, 20, 1);
-                robot.returnAfterBusy();
-                robot.drive(12, 0, 1);
-                robot.returnAfterBusy();
-                break;
-        }
     }
 
     @Override
-    public void loop() {}
+    public void loop() {
+        telemetry.addLine(detectProp());
+        telemetry.update();
+    }
 
     public void sleep(int ms) {
         try {
