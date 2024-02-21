@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.SensorSet.LEDMethods;
 
-//TODO: Uncomment the following line to use
 @TeleOp
 public class CompetitionDriving2024 extends LinearOpMode {
 
