@@ -87,7 +87,7 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
                 } else if (driveswitch == 1) {
                     speed = .66;
                 }
-                if (gamepad2.dpad_left) { // P2 controls dropping b/c accedental drops are too common
+                if (gamepad1.dpad_left) {
                     DropServo.setPosition(.5);
                 } else {
                     DropServo.setPosition(.045);
