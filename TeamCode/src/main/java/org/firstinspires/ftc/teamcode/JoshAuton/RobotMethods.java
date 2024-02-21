@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
+// BASIC METHODS FOR AUTONOMOUS ROBOT MOVEMENT AND CONTROL
 public class RobotMethods {
 
-    // Motor encoder units per revolution
+    // Motor encoder units per full revolution
     private double revolution = 1200;
 
     // Pi to 2 decimal places
@@ -21,7 +21,9 @@ public class RobotMethods {
     private double wheelDiameter = 3.77953;
     // Wheel circumference in inches
     private double wheelCircumference = wheelDiameter * pi;
+    // Inches per full wheel revolution
     private double inchesPerRevolution = wheelCircumference;
+    //
     private double revolutionsPerInch = 1 / inchesPerRevolution;
 
     private double inch = revolution * revolutionsPerInch;

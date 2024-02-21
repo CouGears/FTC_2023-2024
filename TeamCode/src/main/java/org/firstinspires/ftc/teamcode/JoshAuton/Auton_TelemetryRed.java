@@ -11,10 +11,12 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Autonomous
-public class Auton_Telemetry extends OpMode {
+public class Auton_TelemetryRed extends OpMode {
 
     // initialize new instance of robot
     RobotMethods robot = new RobotMethods();
@@ -119,11 +121,19 @@ public class Auton_Telemetry extends OpMode {
         String pos = "right";
         List<Recognition> currentRecognitions = tfod.getRecognitions();
 
-        if (currentRecognitions.size() > 0) {
-            Recognition recognition = currentRecognitions.get(0);
-            for (int i = 0; i < currentRecognitions.size(); i++) {
-                if (currentRecognitions.get(i).getConfidence() > recognition.getConfidence()) {
-                    recognition = currentRecognitions.get(i);
+        ArrayList<Recognition> goodRecognitions = new ArrayList<Recognition>();
+
+        for (int i = 0; i < currentRecognitions.size(); i++) {
+            if (Objects.equals(currentRecognitions.get(i).getLabel(), "Red Marker")) {
+                goodRecognitions.add(currentRecognitions.get(i));
+            }
+        }
+
+        if (goodRecognitions.size() > 0) {
+            Recognition recognition = goodRecognitions.get(0);
+            for (int i = 0; i < goodRecognitions.size(); i++) {
+                if (goodRecognitions.get(i).getConfidence() > recognition.getConfidence()) {
+                    recognition = goodRecognitions.get(i);
                 }
             }
 
