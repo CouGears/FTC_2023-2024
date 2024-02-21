@@ -7,10 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.SensorSet.LEDMethods;
-
 @TeleOp
-public class CompetitionDriving2024 extends LinearOpMode {
+public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
 
     public static DcMotor motorBR, motorBL, motorFL, motorFR, BackIntake, MiddleIntake, Lift, PullUp;
     public static CRServo IntakeString;
@@ -80,11 +78,6 @@ public class CompetitionDriving2024 extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
-        /*
-        Controller 1 is main driver who controls movement, lift, and airplane
-        Controller 2 controls intake and has control over dropping a pixel b/c missdrops happen way too often
-        -Eliezer
-         */
         while (opModeIsActive()) {
             TelemetryUpdate();
             while (!pullup) {
@@ -110,18 +103,18 @@ public class CompetitionDriving2024 extends LinearOpMode {
                 }
 
 
-                if (gamepad1.a && driveswitch == 1) { // P1 controls driving so they still have control over drive speed
+                if (gamepad1.a && driveswitch == 1) {
                     driveswitch = 0;
                 } else if (gamepad1.b && driveswitch == 0) {
                     driveswitch = 1;
                 }
-                if (gamepad2.y || (gamepad2.right_bumper && gamepad2.left_bumper)) { // P2 can take control of intake.
+                if (gamepad1.y || (gamepad1.right_bumper && gamepad1.left_bumper)) {
                     BackIntake.setPower(1);
                     MiddleIntake.setPower(-1);
-                } else if (gamepad2.right_bumper) {
+                } else if (gamepad1.right_bumper) {
                     BackIntake.setPower(1);
                     MiddleIntake.setPower(0);
-                } else if (gamepad2.left_bumper) {
+                } else if (gamepad1.left_bumper) {
                     MiddleIntake.setPower(-1);
                     BackIntake.setPower(0);
                 } else {
@@ -145,9 +138,9 @@ public class CompetitionDriving2024 extends LinearOpMode {
                 motorBR.setPower((-(this.gamepad1.right_stick_y) - (this.gamepad1.right_stick_x) - (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed);
                 motorFR.setPower(-((this.gamepad1.right_stick_y) + (this.gamepad1.right_stick_x) + (this.gamepad1.left_stick_y) + (this.gamepad1.left_stick_x)) * speed);
 
-                if (gamepad2.right_trigger > .1) { // P2 controls intake stuff
+                if (gamepad1.right_trigger > .1) {
                     IntakeString.setPower(gamepad1.right_trigger);
-                } else if (gamepad2.left_trigger > .1) {
+                } else if (gamepad1.left_trigger > .1) {
                     IntakeString.setPower(-1 * gamepad1.left_trigger);
                 } else {
                     IntakeString.setPower(0.0);
@@ -171,8 +164,9 @@ public class CompetitionDriving2024 extends LinearOpMode {
                 PullUp.setPower(-1.0);
             }
         }
-        }
     }
+}
+
 
 
 
