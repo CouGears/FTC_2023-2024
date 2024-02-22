@@ -126,9 +126,8 @@ public class Auton_BlueBackdrop extends OpMode {
                 sleep(500);
                 robot.middle(-1); //Push pixel out
                 sleep(1500);
-                robot.backIntake(0); //Stop wheel movement
-                robot.middle(0);
-                robot.drive(-6, 0, 0.2); //Lightly push pixel on mark
+                robot.backIntake(0);
+                robot.middle(0);//Lightly push pixel on mark
                 robot.returnAfterBusy();
                 robot.drive(34, 0, 1); //Move to middle drop pos
                 robot.returnAfterBusy();
@@ -150,7 +149,7 @@ public class Auton_BlueBackdrop extends OpMode {
                 robot.moveLift(-500, 1, telemetry); //Park
                 robot.drive(0, -32, 1);
                 robot.returnAfterBusy();
-                robot.drive(14, 0, 1);
+                robot.drive(7, 0, 1);
                 robot.returnAfterBusy();
                 break;
         }
