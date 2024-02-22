@@ -50,7 +50,7 @@ public class Auton_BlueBackdrop extends OpMode {
         double dist;
         switch (pos) {
             case "left":
-                robot.drive(7, 3, 1);
+                robot.drive(6, 3, 1);
                 robot.returnAfterBusy();
                 robot.drive(0, 30, 1);
                 robot.returnAfterBusy();
@@ -127,7 +127,8 @@ public class Auton_BlueBackdrop extends OpMode {
                 robot.middle(-1); //Push pixel out
                 sleep(1500);
                 robot.backIntake(0);
-                robot.middle(0);//Lightly push pixel on mark
+                robot.middle(0);
+                robot.drive(-2, 0, 1);//Lightly push pixel on mark
                 robot.returnAfterBusy();
                 robot.drive(34, 0, 1); //Move to middle drop pos
                 robot.returnAfterBusy();

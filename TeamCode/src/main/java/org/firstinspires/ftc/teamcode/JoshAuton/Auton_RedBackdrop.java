@@ -61,7 +61,7 @@ public class Auton_RedBackdrop extends OpMode {
                 // drive to prop
                 robot.drive(0, 5, 1); //Lightly push pixel on mark
                 robot.returnAfterBusy();
-                robot.turn(180, 1);
+                robot.turn(185, .35);
                 robot.returnAfterBusy();
                 robot.drive(0, -28, 1); //Mv to spike mark
                 robot.returnAfterBusy();
@@ -89,7 +89,7 @@ public class Auton_RedBackdrop extends OpMode {
                 robot.returnAfterBusy();
                 robot.setDropServo(0.045);
                 robot.moveLift(-500, 1, telemetry); //Park
-                robot.drive(0, 32, 1);
+                robot.drive(0, 25, 1);
                 robot.returnAfterBusy();
                 robot.drive(5, 0, 1);
                 robot.returnAfterBusy();
@@ -99,21 +99,23 @@ public class Auton_RedBackdrop extends OpMode {
                 // drive to prop
                 robot.drive(0, 5, 1); //Lightly push pixel on mark
                 robot.returnAfterBusy();
-                robot.turn(180, 1);
+                robot.turn(185, .5);
                 robot.returnAfterBusy();
                 robot.drive(0, -27, 1);
                 robot.returnAfterBusy();
-                robot.turn(90, 1);
+                robot.turn(-90, 1);
+                robot.returnAfterBusy();
+                robot.drive(5, 0, 1);
                 robot.returnAfterBusy();
                 // move lift out of the day
                 robot.moveLift(1000, 1, telemetry);
                 robot.returnAfterBusy();
                 // drop pixel
-                robot.middle(1);
+                robot.middle(.5);
                 sleep(1000);
                 robot.middle(0);
                 // back up
-                robot.drive(-3, 0, 1);
+                robot.drive(-5, 0, 1);
                 robot.returnAfterBusy();
                 // Turn and move to backdrop
                 robot.turn(90, 1);
@@ -121,7 +123,7 @@ public class Auton_RedBackdrop extends OpMode {
                 robot.drive(26, 0, 1);
                 robot.returnAfterBusy();
                 // drive towards backdrop at 20% speed
-                robot.drive(10, 0, 0.2);
+                robot.drive(20, 0, 0.2);
                 dist = robot.getBackdropDistance();
                 // wait until robot is less than 3.5 inches from the backdrop
                 while (dist > 3.5) {
@@ -145,11 +147,13 @@ public class Auton_RedBackdrop extends OpMode {
             case "right":
                 robot.drive(0, 5, 1); //Lightly push pixel on mark
                 robot.returnAfterBusy();
-                robot.turn(180, 1);
+                robot.turn(185, .5);
                 robot.returnAfterBusy();
-                robot.drive(2, -3, 1);
+                robot.drive(5, -3, 1);
                 robot.returnAfterBusy();
                 robot.drive(0, -30, 1);
+                robot.returnAfterBusy();
+                robot.drive(8, 0, 1);
                 robot.returnAfterBusy();
                 robot.moveLift(1000, 1, telemetry); //Mv lift out of way
                 robot.returnAfterBusy();
