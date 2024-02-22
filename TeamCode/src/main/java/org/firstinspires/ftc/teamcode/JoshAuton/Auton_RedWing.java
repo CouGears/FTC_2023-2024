@@ -49,36 +49,45 @@ public class Auton_RedWing extends OpMode {
         double dist;
         switch (pos) {
             case "left":
+                // drive to prop
                 robot.drive(0, 32, 1);
                 robot.returnAfterBusy();
                 robot.drive(8, 0, 1);
                 robot.returnAfterBusy();
+                // move lift out of the way
                 robot.moveLift(1000, 1, telemetry);
                 robot.returnAfterBusy();
+                // drop pixel
                 robot.middle(0.5);
                 sleep(1000);
                 robot.middle(0);
                 break;
             case "middle":
+                // drive to prop
                 robot.drive(0, 33, 1);
                 robot.returnAfterBusy();
                 robot.turn(90, 1);
                 robot.returnAfterBusy();
+                // move lift out of the way
                 robot.moveLift(1000, 1, telemetry);
                 robot.returnAfterBusy();
+                // drop pixel
                 robot.middle(0.5);
                 sleep(1000);
                 robot.middle(0);
                 break;
             case "right":
+                // drive to prop
                 robot.drive(0, 28, 1);
                 robot.returnAfterBusy();
                 robot.turn(180, 1);
                 robot.returnAfterBusy();
                 robot.drive(8, 0, 1);
                 robot.returnAfterBusy();
+                // move lift our of the way
                 robot.moveLift(1000, 1, telemetry);
                 robot.returnAfterBusy();
+                // drop prop
                 robot.middle(0.5);
                 sleep(1000);
                 robot.middle(0);

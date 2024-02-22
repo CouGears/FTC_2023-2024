@@ -49,99 +49,135 @@ public class Auton_BlueWingPlusBackdrop extends OpMode {
         double dist;
         switch (pos) {
             case "left":
+                // drive to spike mark
                 robot.drive(0, 28, 1);
                 robot.returnAfterBusy();
                 robot.drive(6, 0, 1);
                 robot.returnAfterBusy();
+                // move lift out of the way
                 robot.moveLift(1000, 1, telemetry);
                 robot.returnAfterBusy();
+                // drop pixel
                 robot.middle(0.5);
                 sleep(1000);
                 robot.middle(0);
+                // move lift back down
                 robot.moveLift(-1000, 1, telemetry);
+                // drive towards backdrop
                 robot.drive(-12, 0, 1);
                 robot.returnAfterBusy();
                 robot.drive(0, 24, 1);
                 robot.returnAfterBusy();
                 robot.drive(84, 0, 1);
                 robot.returnAfterBusy();
+                // move lift up
                 robot.moveLift(1000, 1, telemetry);
+                // drive towards backdrop
                 robot.drive(0, -32, 1);
                 robot.returnAfterBusy();
+                // drive towards backdrop at 20% speed
                 robot.drive(10, 0, 0.2);
                 dist = robot.getBackdropDistance();
+                // wait until robot is less than 3.5 inches away from the backdrop
                 while (dist > 3.5) {
                     dist = robot.getBackdropDistance();
                 }
+                // stop the wheels
                 robot.stopWheels();
+                // drop pixel
                 robot.setDropServo(.5);
                 sleep(1000);
+                // back away from the backdrop a bit
                 robot.drive(-2, 0, 0.5);
                 robot.returnAfterBusy();
                 robot.setDropServo(0.045);
                 break;
             case "middle":
+                // drive to prop
                 robot.drive(0, 32, 1);
                 robot.returnAfterBusy();
                 robot.turn(90, 1);
                 robot.returnAfterBusy();
+                // move the lift out of the way
                 robot.moveLift(1000, 1, telemetry);
                 robot.returnAfterBusy();
+                // drop pixel
                 robot.middle(1);
                 sleep(1000);
                 robot.middle(0);
+                // move the lift down
                 robot.moveLift(-1000, 1, telemetry);
+                // drive towards backdrop
                 robot.drive(-4, 0, 1);
                 robot.returnAfterBusy();
                 robot.turn(-90, 1);
                 robot.returnAfterBusy();
                 robot.drive(76, 0, 1);
                 robot.returnAfterBusy();
+                // move the lift up
                 robot.moveLift(1000, 1, telemetry);
+                // drive towards backdrop
                 robot.drive(0, 4, 1);
                 robot.returnAfterBusy();
+                // drice towards backdrop at 20% speed
                 robot.drive(10, 0, 0.2);
                 dist = robot.getBackdropDistance();
+                // wait until the robot is less than 3.5 inches away from the backdrop
                 while (dist > 3.5) {
                     dist = robot.getBackdropDistance();
                 }
+                // stop the wheels
                 robot.stopWheels();
+                // drop pixel
                 robot.setDropServo(.5);
                 sleep(1000);
+                // back up a bit from the backdrop
                 robot.drive(-2, 0, 0.5);
                 robot.returnAfterBusy();
                 robot.setDropServo(0.045);
                 break;
             case "right":
+                // drive to prop
                 robot.drive(0, 28, 1);
                 robot.returnAfterBusy();
                 robot.turn(180, 1);
                 robot.returnAfterBusy();
                 robot.drive(6, 0, 1);
                 robot.returnAfterBusy();
+                // move lift out of the way
                 robot.moveLift(1000, 1, telemetry);
                 robot.returnAfterBusy();
+                // drop prop
                 robot.middle(0.5);
                 sleep(1000);
+                // move lift down
                 robot.moveLift(-1000, 0, telemetry);
                 robot.middle(0);
+                // drive towards backdrop
                 robot.drive(-76, 0, 1);
                 robot.returnAfterBusy();
+                // move lift up
                 robot.moveLift(1000, 1, telemetry);
+                // drive towards backdrop
                 robot.turn(180, 1);
                 robot.returnAfterBusy();
                 robot.drive(6, 0, 1);
                 robot.returnAfterBusy();
                 robot.drive(0, 6, 1);
                 robot.returnAfterBusy();
+                // drive towards backdrop at 20% speed
                 robot.drive(10, 0, 0.2);
                 dist = robot.getBackdropDistance();
+                // wait until robot is less than 3.5 inches away from backdrop
                 while (dist > 3.5) {
                     dist = robot.getBackdropDistance();
                 }
+                // stop the wheels
                 robot.stopWheels();
+                // drop pixel
                 robot.setDropServo(.5);
                 sleep(1000);
+                // back up a bit from the backdrop
                 robot.drive(-2, 0, 0.5);
                 robot.returnAfterBusy();
                 robot.setDropServo(0.045);
