@@ -164,17 +164,16 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
                     IntakeString.setPower(0.0);
                 }
                 // color sensors 1- green 2-purple 3- yellow all- white (4)
-                if ( (color.red()+ color.green() +color.blue()) == 2600){
-                    pixel_color =4;
-                }
-                else if (color.red()+ color.green() +color.blue() == 650){
-                    pixel_color =1;
-                }
-                else if (color.red()+ color.green() +color.blue() == 1150){
-                    pixel_color =2;
-                }
-                else if (color.red()+ color.green() +color.blue() == 1060){
-                    pixel_color =3;
+                if (color.red() > 0 &&  color.green() > 0 &&  color.blue() > 0 ) {
+                    if ((color.red() / color.blue()) > .82 && (color.red() / color.blue()) < 1.23) {
+                        pixel_color = 4;
+                    } else if ((color.green() / color.red()) < 2.15 && (color.green() / color.red()) > 1.5) {
+                        pixel_color = 1;
+                    } else if ((color.green() / color.blue()) > .65 && (color.green() / color.blue()) < 1.1) {
+                        pixel_color = 2;
+                    } else if ((color.red() / color.blue()) > 1.6 && (color.red() / color.blue()) < 2.2) {
+                        pixel_color = 3;
+                    }
                 }
                 else{ pixel_color = 0;}
                 switch (pixel_color){
@@ -217,16 +216,14 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
                 telemetry.addData("Red", color.red());
                 telemetry.addData("Green", color.green());
                 telemetry.addData("Blue", color.blue());
+                telemetry.addData("color 1-g 2-p 3-y 4-w", pixel_color);
+
                 telemetry.update();
 
 
                 //LIFT
-                if ((gamepad1.dpad_up && Lift.getCurrentPosition() <= liftLimit) || (gamepad1.dpad_up && gamepad1.dpad_right)) {// P1 should still be in control of lift
-                    if(Lift.getCurrentPosition() < 800){
-                        robot.LiftSetPosition(820);
-                    } else {
-                        Lift.setPower(1);
-                    }
+                if ((gamepad1.dpad_up && Lift.getCurrentPosition() <= liftLimit) || (gamepad1.dpad_up && gamepad1.dpad_right)) { // P1 should still be in control of lift
+                    Lift.setPower(1);
                 } else if ((gamepad1.dpad_down && Lift.getCurrentPosition() >= 0) || (gamepad1.dpad_down && gamepad1.dpad_right)) { //At 500 b/c motor will overspin w/ momentum and end up <0
                     Lift.setPower(-1);
                 } else {
