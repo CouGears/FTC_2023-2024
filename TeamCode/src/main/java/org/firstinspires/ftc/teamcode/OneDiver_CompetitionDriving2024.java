@@ -19,6 +19,7 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
     public int intakemode = 0;
     private int liftLimit = 3000;
     private boolean pullup = false;
+    private int dropDelay = 0;
 
     public void TelemetryUpdate() {
         telemetry.addData("Drive Mode", driveswitch);
@@ -88,7 +89,11 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
                     speed = .66;
                 }
                 if (gamepad1.dpad_left) {
-                    DropServo.setPosition(.5);
+                    dropDelay++;
+                    if (dropDelay >= 10){
+                        DropServo.setPosition(.5);
+                        dropDelay = 0;
+                    }
                 } else {
                     DropServo.setPosition(.045);
                 }
@@ -147,8 +152,12 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
                 }
 
                 //LIFT
-                if ((gamepad1.dpad_up && Lift.getCurrentPosition() <= liftLimit) || (gamepad1.dpad_up && gamepad1.dpad_right)) { // P1 should still be in control of lift
-                    Lift.setPower(1);
+                if ((gamepad1.dpad_up && Lift.getCurrentPosition() <= liftLimit) || (gamepad1.dpad_up && gamepad1.dpad_right)) {// P1 should still be in control of lift
+                    if(Lift.getCurrentPosition() < 800){
+                        robot.LiftSetPosition(820);
+                    } else {
+                        Lift.setPower(1);
+                    }
                 } else if ((gamepad1.dpad_down && Lift.getCurrentPosition() >= 0) || (gamepad1.dpad_down && gamepad1.dpad_right)) { //At 500 b/c motor will overspin w/ momentum and end up <0
                     Lift.setPower(-1);
                 } else {
