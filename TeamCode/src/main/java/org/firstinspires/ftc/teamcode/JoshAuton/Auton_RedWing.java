@@ -45,7 +45,6 @@ public class Auton_RedWing extends OpMode {
             i++;
         }
 
-
         double dist;
         switch (pos) {
             case "left":

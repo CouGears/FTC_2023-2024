@@ -65,7 +65,7 @@ public class Auton_BlueBackdrop extends OpMode {
                 robot.returnAfterBusy();
                 robot.drive(12, 0, 1); //Mv to canvas
                 robot.returnAfterBusy();
-                robot.drive(0, 4, 1); //Mv to left spot on canvas
+                robot.drive(0, 18, 1); //Mv to left spot on canvas
                 robot.returnAfterBusy();
                 robot.moveLift(700,.75, telemetry); //Mv lift to drop spot
                 robot.drive(10, 0, 0.2); //Mv up to cnavas
@@ -97,9 +97,7 @@ public class Auton_BlueBackdrop extends OpMode {
                 robot.middle(0);
                 robot.drive(-6, 0,1); //Mv back off pixel
                 robot.returnAfterBusy();
-                robot.turn(-90, 1);
-                robot.returnAfterBusy();
-                robot.drive(0, -6, 1); //Mv to orient w/ middle drop pos
+                robot.turn(-90, 1); //Face backdrop
                 robot.returnAfterBusy();
                 robot.drive(30, 0, 1); //Mv to canvas
                 robot.returnAfterBusy();
@@ -141,7 +139,7 @@ public class Auton_BlueBackdrop extends OpMode {
                     dist = robot.getBackdropDistance();
                 }
                 robot.stopWheels(); //When we get to target distance, stop
-                robot.drive(0, 12, 1); //Mv to right drop pos
+                robot.drive(0, 4, 1); //Mv to right drop pos
                 robot.returnAfterBusy();
                 robot.setDropServo(.5); //Drop pixel
                 sleep(1000);

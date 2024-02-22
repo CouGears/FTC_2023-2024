@@ -52,6 +52,7 @@ public class Auton_BlueWingPlusBackdrop extends OpMode {
                 // drive to spike mark
                 robot.drive(0, 28, 1);
                 robot.returnAfterBusy();
+                // mv on spike mark
                 robot.drive(6, 0, 1);
                 robot.returnAfterBusy();
                 // move lift out of the way
@@ -63,7 +64,7 @@ public class Auton_BlueWingPlusBackdrop extends OpMode {
                 robot.middle(0);
                 // move lift back down
                 robot.moveLift(-1000, 1, telemetry);
-                // drive towards backdrop
+                // drive towards backdrop (thru trusses)
                 robot.drive(-12, 0, 1);
                 robot.returnAfterBusy();
                 robot.drive(0, 24, 1);
@@ -72,7 +73,7 @@ public class Auton_BlueWingPlusBackdrop extends OpMode {
                 robot.returnAfterBusy();
                 // move lift up
                 robot.moveLift(1000, 1, telemetry);
-                // drive towards backdrop
+                // drive towards left drop pos
                 robot.drive(0, -32, 1);
                 robot.returnAfterBusy();
                 // drive towards backdrop at 20% speed
@@ -107,7 +108,7 @@ public class Auton_BlueWingPlusBackdrop extends OpMode {
                 robot.middle(0);
                 // move the lift down
                 robot.moveLift(-1000, 1, telemetry);
-                // drive towards backdrop
+                // drive towards backdrop (thru trusses)
                 robot.drive(-4, 0, 1);
                 robot.returnAfterBusy();
                 robot.turn(-90, 1);
@@ -116,7 +117,7 @@ public class Auton_BlueWingPlusBackdrop extends OpMode {
                 robot.returnAfterBusy();
                 // move the lift up
                 robot.moveLift(1000, 1, telemetry);
-                // drive towards backdrop
+                // drive towards middle drop pos
                 robot.drive(0, 4, 1);
                 robot.returnAfterBusy();
                 // drice towards backdrop at 20% speed

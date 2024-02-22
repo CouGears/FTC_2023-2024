@@ -17,12 +17,12 @@ import java.util.List;
 public class Auton_RedBackdrop extends OpMode {
 
     RobotMethods robot = new RobotMethods();
+    Auton_BlueBackdrop blueBackdrop = new Auton_BlueBackdrop();
 
     // tfod
     private static final boolean USE_WEBCAM = true;
     private static final String TFOD_MODEL_ASSET = "OldPropModel.tflite";
     private static final String[] LABELS = { "Blue Marker", "Red Marker" };
-
     private TfodProcessor tfod;
     private VisionPortal visionPortal;
 
@@ -61,8 +61,6 @@ public class Auton_RedBackdrop extends OpMode {
                 // drive to prop
                 robot.drive(0, 32, 1);
                 robot.returnAfterBusy();
-                robot.drive(9, 0, 1);
-                robot.returnAfterBusy();
                 // move the lift out of the way
                 robot.moveLift(1000, 1, telemetry);
                 robot.returnAfterBusy();
@@ -70,12 +68,13 @@ public class Auton_RedBackdrop extends OpMode {
                 robot.middle(0.5);
                 sleep(1000);
                 robot.middle(0);
-                // move to backdrop
-                robot.drive(-10, 0, 1);
-                robot.returnAfterBusy();
+                // Turn around to face backdrop and mv to backdrop
                 robot.turn(180, 1);
                 robot.returnAfterBusy();
                 robot.drive(25, 0, 1);
+                robot.returnAfterBusy();
+                // Mv to left drop pos
+                robot.drive(-4, 0, 1);
                 robot.returnAfterBusy();
                 // move towards backdrop at 20% speed
                 robot.drive(10, 0, 0.2);
@@ -112,9 +111,10 @@ public class Auton_RedBackdrop extends OpMode {
                 robot.middle(1);
                 sleep(1000);
                 robot.middle(0);
-                // drive to backdrop
-                robot.drive(-6, 0, 1);
+                // back up
+                robot.drive(-3, 0, 1);
                 robot.returnAfterBusy();
+                // Turn and move to backdrop
                 robot.turn(90, 1);
                 robot.returnAfterBusy();
                 robot.drive(26, 0, 1);
@@ -145,8 +145,10 @@ public class Auton_RedBackdrop extends OpMode {
                 // drive to prop
                 robot.drive(0, 32, 1);
                 robot.returnAfterBusy();
+                // turn to align with spike mark
                 robot.turn(180, 1);
                 robot.returnAfterBusy();
+                //Mv on spike mark
                 robot.drive(6, 0, 1);
                 robot.returnAfterBusy();
                 // move lift out of the way
@@ -156,10 +158,17 @@ public class Auton_RedBackdrop extends OpMode {
                 robot.middle(0.5);
                 sleep(1000);
                 robot.middle(0);
-                // drive to backdrop
-                robot.drive(12, -12, 1);
+                // back up
+                robot.drive(-6,0,1);
                 robot.returnAfterBusy();
-                robot.drive(12, 24, 1);
+                // Mv closer to wall to avoid hitting pixel
+                robot.drive(0,12,1);
+                robot.returnAfterBusy();
+                // Mv up to backdrop
+                robot.drive(26,0,1);
+                robot.returnAfterBusy();
+                // Mv to align with right drop pos
+                robot.drive(0,-4,1);
                 robot.returnAfterBusy();
                 // move towards the backdrop at 20% speed
                 robot.drive(10, 0, 0.2);
@@ -177,7 +186,7 @@ public class Auton_RedBackdrop extends OpMode {
                 robot.drive(-4, 0, 0.5);
                 robot.returnAfterBusy();
                 robot.setDropServo(0.045);
-                robot.drive(0, 20, 1);
+                robot.drive(0, 12, 1);
                 robot.returnAfterBusy();
                 robot.drive(12, 0, 1);
                 robot.returnAfterBusy();
