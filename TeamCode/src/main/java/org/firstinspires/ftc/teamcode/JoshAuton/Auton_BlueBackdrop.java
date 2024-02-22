@@ -85,7 +85,7 @@ public class Auton_BlueBackdrop extends OpMode {
                 robot.returnAfterBusy();
                 break;
             case "middle":
-                robot.drive(0, 34, 1); //Mv to spike
+                robot.drive(0, 33, 1); //Mv to spike
                 robot.returnAfterBusy();
                 robot.turn(90, 1); //Turn to orient w/ spike mark
                 robot.returnAfterBusy();
@@ -122,10 +122,10 @@ public class Auton_BlueBackdrop extends OpMode {
             case "right":
                 robot.drive(0, 33, 1); //Mv to spike mark
                 robot.returnAfterBusy();
-                robot.backIntake(0.5); //Start reving back wheel
+                robot.backIntake(1); //Start reving back wheel
                 sleep(500);
-                robot.middle(-0.5); //Push pixel out
-                sleep(1000);
+                robot.middle(-1); //Push pixel out
+                sleep(1500);
                 robot.backIntake(0); //Stop wheel movement
                 robot.middle(0);
                 robot.drive(-6, 0, 0.2); //Lightly push pixel on mark
