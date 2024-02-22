@@ -143,53 +143,42 @@ public class Auton_RedBackdrop extends OpMode {
                 break;
             // if the prop is on the right spike mark
             case "right":
-                // drive to prop
-                robot.drive(0, 32, 1);
+                robot.drive(0, 5, 1); //Lightly push pixel on mark
                 robot.returnAfterBusy();
-                // turn to align with spike mark
                 robot.turn(180, 1);
                 robot.returnAfterBusy();
-                //Mv on spike mark
-                robot.drive(6, 0, 1);
+                robot.drive(2, -3, 1);
                 robot.returnAfterBusy();
-                // move lift out of the way
-                robot.moveLift(1000, 1, telemetry);
+                robot.drive(0, -30, 1);
                 robot.returnAfterBusy();
-                // drop pixel
-                robot.middle(0.5);
+                robot.moveLift(1000, 1, telemetry); //Mv lift out of way
+                robot.returnAfterBusy();
+                robot.middle(0.5); // Drop on spike mark
                 sleep(1000);
                 robot.middle(0);
-                // back up
-                robot.drive(-6,0,1);
+                robot.drive(-6, 0, 1); //Mv back
                 robot.returnAfterBusy();
-                // Mv closer to wall to avoid hitting pixel
-                robot.drive(0,12,1);
+                robot.drive(0, 10, 1); //Mv sideways to wall
                 robot.returnAfterBusy();
-                // Mv up to backdrop
-                robot.drive(26,0,1);
+                robot.drive(30, 0, 1); //Mv to canvas
                 robot.returnAfterBusy();
-                // Mv to align with right drop pos
-                robot.drive(0,-4,1);
-                robot.returnAfterBusy();
-                // move towards the backdrop at 20% speed
-                robot.drive(10, 0, 0.2);
+                robot.drive(50, 0, 0.2); //Mv up to cnavas
                 dist = robot.getBackdropDistance();
-                // wait until the robot is less than 3.5 inches from the backdrop
-                while (dist > 3.5) {
+                while (dist > 3.5) { //While not close enough, keep getting closer
                     dist = robot.getBackdropDistance();
                 }
-                // stop the wheels
-                robot.stopWheels();
-                // drop pixel
-                robot.setDropServo(.5);
+                robot.stopWheels(); //When we get to target distance, stop
+                robot.drive(0, 0, 1); //Mv to canvas
+                robot.returnAfterBusy();
+                robot.setDropServo(.5); //Drop pixel
                 sleep(1000);
-                // park
-                robot.drive(-4, 0, 0.5);
+                robot.drive(-2, 0, 0.5); //Mv back to wall
                 robot.returnAfterBusy();
                 robot.setDropServo(0.045);
-                robot.drive(0, 12, 1);
+                sleep(1000);
+                robot.drive(0, 18, 1); //Park
                 robot.returnAfterBusy();
-                robot.drive(12, 0, 1);
+                robot.drive(10, 0, 1);
                 robot.returnAfterBusy();
                 break;
         }
