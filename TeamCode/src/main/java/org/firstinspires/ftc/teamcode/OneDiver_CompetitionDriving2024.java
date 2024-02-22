@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -9,12 +11,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
-
+    private DigitalChannel red1,red2, red3, green1, green2, green3;
+    private ColorSensor color;
     public static DcMotor motorBR, motorBL, motorFL, motorFR, BackIntake, MiddleIntake, Lift, PullUp;
     public static CRServo IntakeString;
     public static Servo DropServo, AirplaneLaunch;
     private AutonMethods robot = new AutonMethods();
     public int driveswitch = 1;
+    private int pixel_color = 0;
 
     public int intakemode = 0;
     private int liftLimit = 3000;
@@ -51,6 +55,15 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
         DropServo = hardwareMap.get(Servo.class, "DropServo");
         AirplaneLaunch = hardwareMap.get(Servo.class, "AirplaneLaunch");
         PullUp = hardwareMap.get(DcMotor.class, "PullUp");
+
+        red1= hardwareMap.get(DigitalChannel.class, "red1");
+        green1= hardwareMap.get(DigitalChannel.class, "green1");
+        red2= hardwareMap.get(DigitalChannel.class, "red2");
+        green2= hardwareMap.get(DigitalChannel.class, "green2");
+        red3= hardwareMap.get(DigitalChannel.class, "red3");
+        green3= hardwareMap.get(DigitalChannel.class, "green3");
+        color = hardwareMap.get(ColorSensor.class, "Color");
+
 
         motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -150,6 +163,62 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
                 } else {
                     IntakeString.setPower(0.0);
                 }
+                // color sensors 1- green 2-purple 3- yellow all- white (4)
+                if ( (color.red()+ color.green() +color.blue()) == 2600){
+                    pixel_color =4;
+                }
+                else if (color.red()+ color.green() +color.blue() == 650){
+                    pixel_color =1;
+                }
+                else if (color.red()+ color.green() +color.blue() == 1150){
+                    pixel_color =2;
+                }
+                else if (color.red()+ color.green() +color.blue() == 1060){
+                    pixel_color =3;
+                }
+                else{ pixel_color = 0;}
+                switch (pixel_color){
+                    case 1:
+                        // telemetry.addLine("Reading: green");
+                        red1.setState(true);
+                        green1.setState(true);
+                        break;
+                    case 2:
+                        //telemetry.addLine("Reading: purple");
+                        red2.setState(true);
+                        green2.setState(true);
+                        break;
+                    case 3:
+                        //telemetry.addLine("Reading: yellow");
+                        red3.setState(true);
+                        green3.setState(true);
+                        break;
+                    case 4:
+                        //telemetry.addLine("Reading: white");
+                        red1.setState(true);
+                        green1.setState(true);
+                        red2.setState(true);
+                        green2.setState(true);
+                        red3.setState(true);
+                        green3.setState(true);
+                        break;
+                    case 0:
+                        red1.setState(false);
+                        green1.setState(false);
+                        red2.setState(false);
+                        green2.setState(false);
+                        red3.setState(false);
+                        green3.setState(false);
+                        // telemetry.addLine("Reading: No Pixel");
+                        break;
+
+                }
+
+                telemetry.addData("Red", color.red());
+                telemetry.addData("Green", color.green());
+                telemetry.addData("Blue", color.blue());
+                telemetry.update();
+
 
                 //LIFT
                 if ((gamepad1.dpad_up && Lift.getCurrentPosition() <= liftLimit) || (gamepad1.dpad_up && gamepad1.dpad_right)) {// P1 should still be in control of lift
