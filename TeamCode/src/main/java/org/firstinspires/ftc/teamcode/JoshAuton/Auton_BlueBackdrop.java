@@ -50,9 +50,9 @@ public class Auton_BlueBackdrop extends OpMode {
         double dist;
         switch (pos) {
             case "left":
-                robot.drive(6, 0, 1);
+                robot.drive(7, 3, 1);
                 robot.returnAfterBusy();
-                robot.drive(0, 28, 1);
+                robot.drive(0, 30, 1);
                 robot.returnAfterBusy();
                 robot.moveLift(1000, 1, telemetry); //Mv lift out of way
                 robot.returnAfterBusy();
@@ -61,19 +61,18 @@ public class Auton_BlueBackdrop extends OpMode {
                 robot.middle(0);
                 robot.drive(-6, 0, 1); //Mv back
                 robot.returnAfterBusy();
-                robot.drive(0, -6, 1); //Mv sideways to wall
+                robot.drive(0, -10, 1); //Mv sideways to wall
                 robot.returnAfterBusy();
-                robot.drive(12, 0, 1); //Mv to canvas
+                robot.drive(30, 0, 1); //Mv to canvas
                 robot.returnAfterBusy();
-                robot.drive(0, 18, 1); //Mv to left spot on canvas
-                robot.returnAfterBusy();
-                robot.moveLift(700,.75, telemetry); //Mv lift to drop spot
-                robot.drive(10, 0, 0.2); //Mv up to cnavas
+                robot.drive(50, 0, 0.2); //Mv up to cnavas
                 dist = robot.getBackdropDistance();
                 while (dist > 3.5) { //While not close enough, keep getting closer
                     dist = robot.getBackdropDistance();
                 }
                 robot.stopWheels(); //When we get to target distance, stop
+                robot.drive(0, 0, 1); //Mv to canvas
+                robot.returnAfterBusy();
                 robot.setDropServo(.5); //Drop pixel
                 sleep(1000);
                 robot.drive(-2, 0, 0.5); //Mv back to wall
@@ -107,6 +106,8 @@ public class Auton_BlueBackdrop extends OpMode {
                     dist = robot.getBackdropDistance();
                 }
                 robot.stopWheels(); //When we get to target distance, stop
+                robot.drive(0, 2, 1); //Mv sideways
+                robot.returnAfterBusy();
                 robot.setDropServo(0.5); //Drop pixel
                 sleep(1000);
                 robot.drive(-2, 0, 0.5); //move to wall
@@ -119,7 +120,7 @@ public class Auton_BlueBackdrop extends OpMode {
                 robot.returnAfterBusy();
                 break;
             case "right":
-                robot.drive(0, 28, 1); //Mv to spike mark
+                robot.drive(0, 33, 1); //Mv to spike mark
                 robot.returnAfterBusy();
                 robot.backIntake(0.5); //Start reving back wheel
                 sleep(500);
