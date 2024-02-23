@@ -22,6 +22,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 @TeleOp
+@Disabled
 public class EX_AT_V3 extends LinearOpMode {
     //*****************************VARS*****************************
     //-----------------------------EXAMPLE VARS :(-----------------------------
@@ -106,8 +107,8 @@ public class EX_AT_V3 extends LinearOpMode {
             if (targetFound) {
                 telemetry.addData(">", "HOLD Left-Bumper to Drive to Target\n");
                 telemetry.addData("Target", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-                telemetry.addData(">", "Range %d", desiredTag.ftcPose.range);
-                telemetry.addData(">", "Bearing %d", desiredTag.ftcPose.bearing);
+                telemetry.addData(">", "Range %2f", desiredTag.ftcPose.range);
+                telemetry.addData(">", "Bearing %2f", desiredTag.ftcPose.bearing);
 
             } else {
                 telemetry.addData(">", "Drive using joysticks to find valid target\n");
@@ -175,8 +176,8 @@ public class EX_AT_V3 extends LinearOpMode {
                     }
                     double forward = sqrt(Math.pow(desiredTag.ftcPose.range, 2) - Math.pow(strafe, 2)); //BC = sqrt(AB^2 - AC^2)
                     telemetry.addData(">", "ATTEMPT 2");
-                    telemetry.addData("FWD = %d", forward);
-                    telemetry.addData("STRAFE = %d", strafe);
+                    telemetry.addData("FWD = %2f", forward);
+                    telemetry.addData("STRAFE = %2f", strafe);
                     robot.drive(forward * inch, strafe * inch, .5);
                     robot.drive(0, 7 * inch, .5); // STRAFE B/C CAMERA IS ON LEFT AND DROPPER IS RIGHT (*COULD BE -7, I DONT REMEMBER*)
                 }
@@ -195,18 +196,18 @@ public class EX_AT_V3 extends LinearOpMode {
                     if (side == "moveL") {
                         if (desiredTag.ftcPose.bearing > -3) { //GIVE WHILE LOOP A BUFFER OF 3 DEG MEANING while (!within 3 deg)
                             robot.drive(0, -1 * inch, .5); //MOVE L 1in
-                            telemetry.addData("Current Bearing = %d", desiredTag.ftcPose.bearing);
+                            telemetry.addData("Current Bearing = %2f", desiredTag.ftcPose.bearing);
                         }
                     } else if (side == "moveR") {
                         if (desiredTag.ftcPose.bearing < 3) { //GIVE WHILE LOOP A BUFFER OF 3 DEG MEANING while (!within 3 deg)
                             robot.drive(0, 1 * inch, .5); //MOVE R 1in
-                            telemetry.addData("Current Bearing = %d", desiredTag.ftcPose.bearing);
+                            telemetry.addData("Current Bearing = %2f", desiredTag.ftcPose.bearing);
                         }
                     }
 
                     if (desiredTag.ftcPose.range > 7) { //GET WITHIN 7in
                         robot.drive(1 * inch, 0, .5); //MOVE 1in FWD
-                        telemetry.addData("Current Range = %d", desiredTag.ftcPose.range);
+                        telemetry.addData("Current Range = %2f", desiredTag.ftcPose.range);
                     }
                     robot.drive(0, 7 * inch, .5); // STRAFE B/C CAMERA IS ON LEFT AND DROPPER IS RIGHT (*COULD BE -7, I DONT REMEMBER*)
                 }

@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.camera;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -46,6 +47,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @TeleOp
+@Disabled
 //******************WORKS!******************
 
 public class EX_AT_V2 extends LinearOpMode

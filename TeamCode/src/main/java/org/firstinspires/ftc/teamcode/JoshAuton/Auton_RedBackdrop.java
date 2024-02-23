@@ -17,15 +17,16 @@ import java.util.List;
 public class Auton_RedBackdrop extends OpMode {
 
     RobotMethods robot = new RobotMethods();
+    Auton_BlueBackdrop blueBackdrop = new Auton_BlueBackdrop();
 
     // tfod
     private static final boolean USE_WEBCAM = true;
     private static final String TFOD_MODEL_ASSET = "OldPropModel.tflite";
     private static final String[] LABELS = { "Blue Marker", "Red Marker" };
-
     private TfodProcessor tfod;
     private VisionPortal visionPortal;
 
+    // robot init function
     @Override
     public void init() {
         robot.init(hardwareMap, telemetry);
@@ -33,124 +34,165 @@ public class Auton_RedBackdrop extends OpMode {
         initTfod();
     }
 
+
+    // code to run on auton start
     @Override
     public void start() {
+        // inital value of position (by default I set the inital value of pos to right because the camera will not detect that position)
         String pos = "right";
 
+        // scan for a prop 300 times (unless a prop is found)
         int i = 0;
         while (i < 300 && pos.equals("right")) {
+            // update pos
             pos = detectProp();
             telemetry.update();
+            // wait 20ms
             sleep(20);
             i++;
         }
 
-
+        // initialize distance variable here
         double dist;
+
         switch (pos) {
+            // if the prop is on left spike mark
             case "left":
-                robot.drive(0, 32, 1);
+                // drive to prop
+                robot.drive(0, 5, 1); //Lightly push pixel on mark
                 robot.returnAfterBusy();
-                robot.drive(9, 0, 1);
+                robot.turn(185, .35);
                 robot.returnAfterBusy();
-                robot.moveLift(1000, 1, telemetry);
+                robot.drive(0, -28, 1); //Mv to spike mark
                 robot.returnAfterBusy();
-                robot.middle(0.5);
-                sleep(1000);
+                robot.backIntake(.5); //Start reving back wheel
+                sleep(500);
+                robot.middle(-.5); //Push pixel out
+                sleep(1500);
+                robot.backIntake(0); //Stop wheel movement
                 robot.middle(0);
-                robot.drive(-10, 0, 1);
+                robot.drive(34, 0, 1); //Move to middle drop pos
                 robot.returnAfterBusy();
-                robot.turn(180, 1);
-                robot.returnAfterBusy();
-                robot.drive(25, 0, 1);
+                robot.moveLift(1000, 1, telemetry); //Raise lift
                 robot.returnAfterBusy();
                 robot.drive(10, 0, 0.2);
                 dist = robot.getBackdropDistance();
-                while (dist > 3.5) {
+                while (dist > 3.5) { //While not close enough, keep getting closer
                     dist = robot.getBackdropDistance();
                 }
-                robot.stopWheels();
-                robot.setDropServo(.5);
+                robot.stopWheels(); //When we get to target distance, stop
+                robot.drive(0, 0, 1); //Mv to right drop pos
+                robot.returnAfterBusy();
+                robot.setDropServo(.5); //Drop pixel
                 sleep(1000);
-                robot.drive(-4, 0, 0.5);
+                robot.drive(-2, 0, 0.5); //Move to wall
                 robot.returnAfterBusy();
                 robot.setDropServo(0.045);
-                robot.drive(0, 30, 1);
+                robot.moveLift(-500, 1, telemetry); //Park
+                robot.drive(0, 25, 1);
                 robot.returnAfterBusy();
-                robot.drive(12, 0, 1);
+                robot.drive(5, 0, 1);
                 robot.returnAfterBusy();
                 break;
+            // if the prop is on the middle spike mark
             case "middle":
-                robot.drive(0, 32, 1);
+                // drive to prop
+                robot.drive(0, 5, 1); //Lightly push pixel on mark
                 robot.returnAfterBusy();
-                robot.turn(90, 1);
+                robot.turn(185, .5);
                 robot.returnAfterBusy();
+                robot.drive(0, -27, 1);
+                robot.returnAfterBusy();
+                robot.turn(-90, 1);
+                robot.returnAfterBusy();
+                robot.drive(5, 0, 1);
+                robot.returnAfterBusy();
+                // move lift out of the day
                 robot.moveLift(1000, 1, telemetry);
                 robot.returnAfterBusy();
-                robot.middle(1);
+                // drop pixel
+                robot.middle(.5);
                 sleep(1000);
                 robot.middle(0);
-                robot.drive(-6, 0, 1);
+                // back up
+                robot.drive(-5, 0, 1);
                 robot.returnAfterBusy();
+                // Turn and move to backdrop
                 robot.turn(90, 1);
                 robot.returnAfterBusy();
                 robot.drive(26, 0, 1);
                 robot.returnAfterBusy();
-                robot.drive(10, 0, 0.2);
+                // drive towards backdrop at 20% speed
+                robot.drive(20, 0, 0.2);
                 dist = robot.getBackdropDistance();
+                // wait until robot is less than 3.5 inches from the backdrop
                 while (dist > 3.5) {
                     dist = robot.getBackdropDistance();
                 }
+                // stop the wheels
                 robot.stopWheels();
+                // drop the pixel
                 robot.setDropServo(.5);
                 sleep(1000);
+                // park
                 robot.drive(-4, 0, 0.5);
                 robot.returnAfterBusy();
                 robot.setDropServo(0.045);
-                robot.drive(0, 22, 1);
-                robot.returnAfterBusy();
-                robot.drive(12, 0, 1);
-                robot.returnAfterBusy();
-                break;
-            case "right":
-                robot.drive(0, 32, 1);
-                robot.returnAfterBusy();
-                robot.turn(180, 1);
+                robot.drive(0, -22, 1);
                 robot.returnAfterBusy();
                 robot.drive(6, 0, 1);
                 robot.returnAfterBusy();
-                robot.moveLift(1000, 1, telemetry);
+                break;
+            // if the prop is on the right spike mark
+            case "right":
+                robot.drive(0, 5, 1); //Lightly push pixel on mark
                 robot.returnAfterBusy();
-                robot.middle(0.5);
+                robot.turn(185, .5);
+                robot.returnAfterBusy();
+                robot.drive(5, -3, 1);
+                robot.returnAfterBusy();
+                robot.drive(0, -30, 1);
+                robot.returnAfterBusy();
+                robot.drive(8, 0, 1);
+                robot.returnAfterBusy();
+                robot.moveLift(1000, 1, telemetry); //Mv lift out of way
+                robot.returnAfterBusy();
+                robot.middle(0.5); // Drop on spike mark
                 sleep(1000);
                 robot.middle(0);
-                robot.drive(12, -12, 1);
+                robot.drive(-6, 0, 1); //Mv back
                 robot.returnAfterBusy();
-                robot.drive(12, 24, 1);
+                robot.drive(0, 10, 1); //Mv sideways to wall
                 robot.returnAfterBusy();
-                robot.drive(10, 0, 0.2);
+                robot.drive(30, 0, 1); //Mv to canvas
+                robot.returnAfterBusy();
+                robot.drive(50, 0, 0.2); //Mv up to cnavas
                 dist = robot.getBackdropDistance();
-                while (dist > 3.5) {
+                while (dist > 3.5) { //While not close enough, keep getting closer
                     dist = robot.getBackdropDistance();
                 }
-                robot.stopWheels();
-                robot.setDropServo(.5);
+                robot.stopWheels(); //When we get to target distance, stop
+                robot.drive(0, 0, 1); //Mv to canvas
+                robot.returnAfterBusy();
+                robot.setDropServo(.5); //Drop pixel
                 sleep(1000);
-                robot.drive(-4, 0, 0.5);
+                robot.drive(-2, 0, 0.5); //Mv back to wall
                 robot.returnAfterBusy();
                 robot.setDropServo(0.045);
-                robot.drive(0, 20, 1);
+                sleep(1000);
+                robot.drive(0, 18, 1); //Park
                 robot.returnAfterBusy();
-                robot.drive(12, 0, 1);
+                robot.drive(10, 0, 1);
                 robot.returnAfterBusy();
                 break;
         }
     }
 
+    // empty loop funcion
     @Override
-    public void loop() {
-    }
+    public void loop() {}
 
+    // sleep function
     public void sleep(int ms) {
         try {
             Thread.sleep(ms);
@@ -160,6 +202,7 @@ public class Auton_RedBackdrop extends OpMode {
         }
     }
 
+    // tensorflow init function
     private void initTfod() {
 
         // Create the TensorFlow processor by using a builder.
@@ -221,19 +264,27 @@ public class Auton_RedBackdrop extends OpMode {
 
     }   // end method initTfod()
 
+    // function to scan for a prop
     private String detectProp() {
-
+        // set default pos to right
         String pos = "right";
+        // get list of all recognitions
         List<Recognition> currentRecognitions = tfod.getRecognitions();
 
+        // if there are any recognitions
         if (currentRecognitions.size() > 0) {
+            // get the first recognition
             Recognition recognition = currentRecognitions.get(0);
 
+            // get the x position of the recognition
             double x = (recognition.getLeft() + recognition.getRight()) / 2;
+            // if the x position is less than 300 (on the left)
             if (x < 300) {
+                // set the pos to left
                 telemetry.addLine("Spike Mark: left");
                 pos = "left";
-            } else {
+            } else { // if the x position is more than 300 (on the right)
+                // set the pos to middle (bc the camera can only see left and middle spike marks)
                 telemetry.addLine("Spike Mark: middle");
                 pos = "middle";
             }

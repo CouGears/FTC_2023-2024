@@ -228,9 +228,6 @@ public class AutonMethods{
 
 
     public void LiftSetPosition(int targetPosition) {
-        if (tele == null) {
-            throw new IllegalStateException("Telemetry is not initialized.");
-        }
 
         int errorMargin = 10; // Acceptable range to consider the target reached
 
@@ -238,15 +235,11 @@ public class AutonMethods{
         Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         int currentPosition = Lift.getCurrentPosition(); // Get the current position
-        tele.addData("Current Position", currentPosition);
-        tele.addData("Target Position", targetPosition);
-        tele.update();
 
         // Calculate the direction to move
         int direction = targetPosition > currentPosition ? 1 : -1;
         // Set a constant power level for movement (adjust as necessary)
         double power = -0.006 * direction;
-
 
         while (Math.abs(Lift.getCurrentPosition() - targetPosition) > errorMargin) {
             if(Math.abs(Lift.getCurrentPosition())>Math.abs(targetPosition)){
@@ -254,20 +247,6 @@ public class AutonMethods{
                 return;
             }
             Lift.setPower(power);
-
-            // Update telemetry
-            tele.addData("Current Position", Lift.getCurrentPosition());
-            tele.addData("Target Position", targetPosition);
-            tele.addData("Motor Power", power);
-            tele.update();
-
-            // Optional delay for telemetry update
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                return;
-            }
         }
 
         // Stop the motor once the target is reached
