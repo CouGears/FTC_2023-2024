@@ -63,7 +63,7 @@ public class Auton_RedWing extends OpMode {
                 break;
             case "middle":
                 // drive to prop
-                robot.drive(0, 33, 1);
+                robot.drive(0, 36, 1);
                 robot.returnAfterBusy();
                 robot.turn(90, 1);
                 robot.returnAfterBusy();
@@ -77,11 +77,11 @@ public class Auton_RedWing extends OpMode {
                 break;
             case "right":
                 // drive to prop
-                robot.drive(0, 28, 1);
+                robot.drive(0, 31, 1);
                 robot.returnAfterBusy();
                 robot.turn(180, 1);
                 robot.returnAfterBusy();
-                robot.drive(8, 0, 1);
+                robot.drive(9, 0, 1);
                 robot.returnAfterBusy();
                 // move lift our of the way
                 robot.moveLift(1000, 1, telemetry);
