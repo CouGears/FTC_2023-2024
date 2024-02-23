@@ -71,7 +71,7 @@ public class Auton_RedBackdrop extends OpMode {
                 robot.returnAfterBusy();
                 robot.backIntake(.6); //Start reving back wheel
                 sleep(500);
-                robot.middle(-.6); //Push pixel out
+                robot.middle(-.6; //Push pixel out
                 sleep(1500);
                 robot.backIntake(0); //Stop wheel movement
                 robot.middle(0);
@@ -161,7 +161,7 @@ public class Auton_RedBackdrop extends OpMode {
                 robot.middle(0);
                 robot.drive(-6, 0, 1); //Mv back
                 robot.returnAfterBusy();
-                robot.drive(0, 10, 1); //Mv sideways to wall
+                robot.drive(0, 15, 1); //Mv sideways to wall
                 robot.returnAfterBusy();
                 robot.drive(35, 0, 1); //Mv to canvas
                 robot.returnAfterBusy();
@@ -171,7 +171,7 @@ public class Auton_RedBackdrop extends OpMode {
                     dist = robot.getBackdropDistance();
                 }
                 robot.stopWheels(); //When we get to target distance, stop
-                robot.drive(1, 4, 1); //Mv to canvas
+                robot.drive(1, -3, 1); //Mv to canvas
                 robot.returnAfterBusy();
                 robot.setDropServo(.5); //Drop pixel
                 sleep(1000);
