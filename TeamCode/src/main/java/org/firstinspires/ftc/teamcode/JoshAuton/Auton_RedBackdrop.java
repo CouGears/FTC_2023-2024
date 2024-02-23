@@ -58,6 +58,7 @@ public class Auton_RedBackdrop extends OpMode {
         switch (pos) {
             // if the prop is on left spike mark
             case "left":
+
                 // drive to prop
                 robot.drive(-5, 5, 1); //Lightly push pixel on mark
                 robot.returnAfterBusy();
