@@ -72,7 +72,7 @@ public class Auton_RedBackdrop extends OpMode {
                 robot.returnAfterBusy();
                 robot.backIntake(.6); //Start reving back wheel
                 sleep(500);
-                robot.middle(-.6; //Push pixel out
+                robot.middle(-.6); //Push pixel out
                 sleep(1500);
                 robot.backIntake(0); //Stop wheel movement
                 robot.middle(0);
