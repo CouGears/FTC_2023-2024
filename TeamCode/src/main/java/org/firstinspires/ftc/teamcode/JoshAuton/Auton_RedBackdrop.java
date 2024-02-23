@@ -59,15 +59,15 @@ public class Auton_RedBackdrop extends OpMode {
             // if the prop is on left spike mark
             case "left":
                 // drive to prop
-                robot.drive(0, 5, 1); //Lightly push pixel on mark
+                robot.drive(0, 5, 1);
                 robot.returnAfterBusy();
                 robot.turn(185, .35);
                 robot.returnAfterBusy();
                 robot.drive(0, -28, 1); //Mv to spike mark
                 robot.returnAfterBusy();
-                robot.backIntake(.5); //Start reving back wheel
+                robot.backIntake(.75); //Start reving back wheel
                 sleep(500);
-                robot.middle(-.5); //Push pixel out
+                robot.middle(-.75); //Push pixel out
                 sleep(1500);
                 robot.backIntake(0); //Stop wheel movement
                 robot.middle(0);
@@ -81,7 +81,7 @@ public class Auton_RedBackdrop extends OpMode {
                     dist = robot.getBackdropDistance();
                 }
                 robot.stopWheels(); //When we get to target distance, stop
-                robot.drive(0, 0, 1); //Mv to right drop pos
+                robot.drive(0, 3, 1); //Mv to right drop pos
                 robot.returnAfterBusy();
                 robot.setDropServo(.5); //Drop pixel
                 sleep(1000);
@@ -138,7 +138,7 @@ public class Auton_RedBackdrop extends OpMode {
                 robot.drive(-4, 0, 0.5);
                 robot.returnAfterBusy();
                 robot.setDropServo(0.045);
-                robot.drive(0, -22, 1);
+                robot.drive(0, 22, 1);
                 robot.returnAfterBusy();
                 robot.drive(6, 0, 1);
                 robot.returnAfterBusy();
