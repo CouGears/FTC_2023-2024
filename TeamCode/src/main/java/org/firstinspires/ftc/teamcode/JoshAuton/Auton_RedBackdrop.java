@@ -45,7 +45,7 @@ public class Auton_RedBackdrop extends OpMode {
         int i = 0;
         while (i < 300 && pos.equals("right")) {
             // update pos
-            pos = detectProp();
+            pos = detectProp("Red Marker");
             telemetry.update();
             // wait 20ms
             sleep(20);
@@ -59,19 +59,25 @@ public class Auton_RedBackdrop extends OpMode {
             // if the prop is on left spike mark
             case "left":
                 // drive to prop
-                robot.drive(0, 5, 1); //Lightly push pixel on mark
+                robot.drive(-5, 5, 1); //Lightly push pixel on mark
                 robot.returnAfterBusy();
-                robot.turn(185, .35);
+                robot.turn(182, .35);
                 robot.returnAfterBusy();
                 robot.drive(0, -28, 1); //Mv to spike mark
                 robot.returnAfterBusy();
-                robot.backIntake(.5); //Start reving back wheel
+                robot.drive(-7, 0, 1); //Mv to spike mark
+                robot.returnAfterBusy();
+                robot.drive(4, 0, 1); //Mv to spike mark
+                robot.returnAfterBusy();
+                robot.backIntake(.6); //Start reving back wheel
                 sleep(500);
-                robot.middle(-.5); //Push pixel out
+                robot.middle(-.6); //Push pixel out
                 sleep(1500);
                 robot.backIntake(0); //Stop wheel movement
                 robot.middle(0);
-                robot.drive(34, 0, 1); //Move to middle drop pos
+                //robot.drive(-5, 0, 1); //Move to middle drop pos
+                //robot.returnAfterBusy();
+                robot.drive(39, 0, 1); //Move to middle drop pos
                 robot.returnAfterBusy();
                 robot.moveLift(1000, 1, telemetry); //Raise lift
                 robot.returnAfterBusy();
@@ -81,7 +87,7 @@ public class Auton_RedBackdrop extends OpMode {
                     dist = robot.getBackdropDistance();
                 }
                 robot.stopWheels(); //When we get to target distance, stop
-                robot.drive(0, 0, 1); //Mv to right drop pos
+                robot.drive(1, -3, 1); //Mv to right drop pos
                 robot.returnAfterBusy();
                 robot.setDropServo(.5); //Drop pixel
                 sleep(1000);
@@ -89,19 +95,15 @@ public class Auton_RedBackdrop extends OpMode {
                 robot.returnAfterBusy();
                 robot.setDropServo(0.045);
                 robot.moveLift(-500, 1, telemetry); //Park
-                robot.drive(0, 25, 1);
-                robot.returnAfterBusy();
-                robot.drive(5, 0, 1);
-                robot.returnAfterBusy();
                 break;
             // if the prop is on the middle spike mark
             case "middle":
                 // drive to prop
-                robot.drive(0, 5, 1); //Lightly push pixel on mark
+                robot.drive(-5, 5, 1); //Lightly push pixel on mark
                 robot.returnAfterBusy();
-                robot.turn(185, .5);
+                robot.turn(183, .5);
                 robot.returnAfterBusy();
-                robot.drive(0, -27, 1);
+                robot.drive(-3, -27, 1);
                 robot.returnAfterBusy();
                 robot.turn(-90, 1);
                 robot.returnAfterBusy();
@@ -115,12 +117,12 @@ public class Auton_RedBackdrop extends OpMode {
                 sleep(1000);
                 robot.middle(0);
                 // back up
-                robot.drive(-5, 0, 1);
+                robot.drive(-8, 0, 1);
                 robot.returnAfterBusy();
                 // Turn and move to backdrop
                 robot.turn(90, 1);
                 robot.returnAfterBusy();
-                robot.drive(26, 0, 1);
+                robot.drive(31, 0, 1);
                 robot.returnAfterBusy();
                 // drive towards backdrop at 20% speed
                 robot.drive(20, 0, 0.2);
@@ -129,8 +131,11 @@ public class Auton_RedBackdrop extends OpMode {
                 while (dist > 3.5) {
                     dist = robot.getBackdropDistance();
                 }
+
                 // stop the wheels
                 robot.stopWheels();
+                robot.drive(.5, -2, 1); //Mv to spike mark
+                robot.returnAfterBusy();
                 // drop the pixel
                 robot.setDropServo(.5);
                 sleep(1000);
@@ -138,22 +143,16 @@ public class Auton_RedBackdrop extends OpMode {
                 robot.drive(-4, 0, 0.5);
                 robot.returnAfterBusy();
                 robot.setDropServo(0.045);
-                robot.drive(0, -22, 1);
-                robot.returnAfterBusy();
-                robot.drive(6, 0, 1);
-                robot.returnAfterBusy();
                 break;
             // if the prop is on the right spike mark
             case "right":
-                robot.drive(0, 5, 1); //Lightly push pixel on mark
+                robot.drive(-8, 5, 1); //Lightly push pixel on mark
                 robot.returnAfterBusy();
-                robot.turn(185, .5);
+                robot.turn(182, .5);
                 robot.returnAfterBusy();
-                robot.drive(5, -3, 1);
+                robot.drive(0, -31, 1);
                 robot.returnAfterBusy();
-                robot.drive(0, -30, 1);
-                robot.returnAfterBusy();
-                robot.drive(8, 0, 1);
+                robot.drive(4, 0, 1);
                 robot.returnAfterBusy();
                 robot.moveLift(1000, 1, telemetry); //Mv lift out of way
                 robot.returnAfterBusy();
@@ -164,26 +163,22 @@ public class Auton_RedBackdrop extends OpMode {
                 robot.returnAfterBusy();
                 robot.drive(0, 10, 1); //Mv sideways to wall
                 robot.returnAfterBusy();
-                robot.drive(30, 0, 1); //Mv to canvas
+                robot.drive(35, 0, 1); //Mv to canvas
                 robot.returnAfterBusy();
-                robot.drive(50, 0, 0.2); //Mv up to cnavas
+                robot.drive(50, 0, 0.4); //Mv up to cnavas
                 dist = robot.getBackdropDistance();
                 while (dist > 3.5) { //While not close enough, keep getting closer
                     dist = robot.getBackdropDistance();
                 }
                 robot.stopWheels(); //When we get to target distance, stop
-                robot.drive(0, 0, 1); //Mv to canvas
+                robot.drive(1, 4, 1); //Mv to canvas
                 robot.returnAfterBusy();
                 robot.setDropServo(.5); //Drop pixel
                 sleep(1000);
-                robot.drive(-2, 0, 0.5); //Mv back to wall
+                robot.drive(-2, 0, 1); //Mv back to wall
                 robot.returnAfterBusy();
                 robot.setDropServo(0.045);
                 sleep(1000);
-                robot.drive(0, 18, 1); //Park
-                robot.returnAfterBusy();
-                robot.drive(10, 0, 1);
-                robot.returnAfterBusy();
                 break;
         }
     }
@@ -265,28 +260,30 @@ public class Auton_RedBackdrop extends OpMode {
     }   // end method initTfod()
 
     // function to scan for a prop
-    private String detectProp() {
+    private String detectProp(String autonColor) {
         // set default pos to right
         String pos = "right";
         // get list of all recognitions
         List<Recognition> currentRecognitions = tfod.getRecognitions();
-
         // if there are any recognitions
         if (currentRecognitions.size() > 0) {
             // get the first recognition
             Recognition recognition = currentRecognitions.get(0);
 
-            // get the x position of the recognition
-            double x = (recognition.getLeft() + recognition.getRight()) / 2;
-            // if the x position is less than 300 (on the left)
-            if (x < 300) {
-                // set the pos to left
-                telemetry.addLine("Spike Mark: left");
-                pos = "left";
-            } else { // if the x position is more than 300 (on the right)
-                // set the pos to middle (bc the camera can only see left and middle spike marks)
-                telemetry.addLine("Spike Mark: middle");
-                pos = "middle";
+            // check if the recognition label matches the autonomous color and its confidence is above 70 percent
+            if (recognition.getLabel().equals(autonColor) && recognition.getConfidence() > 0.6) {
+                // get the x position of the recognition
+                double x = (recognition.getLeft() + recognition.getRight()) / 2;
+                // if the x position is less than 300 (on the left)
+                if (x < 300) {
+                    // set the pos to left
+                    telemetry.addLine("Spike Mark: left");
+                    pos = "left";
+                } else { // if the x position is more than 300 (on the right)
+                    // set the pos to middle (bc the camera can only see left and middle spike marks)
+                    telemetry.addLine("Spike Mark: middle");
+                    pos = "middle";
+                }
             }
         }
 

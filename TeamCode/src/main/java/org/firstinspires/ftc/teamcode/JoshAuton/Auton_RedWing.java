@@ -39,7 +39,7 @@ public class Auton_RedWing extends OpMode {
 
         int i = 0;
         while (i < 300 && pos.equals("right")) {
-            pos = detectProp();
+            pos = detectProp("Red Marker");
             telemetry.update();
             sleep(20);
             i++;
@@ -168,21 +168,30 @@ public class Auton_RedWing extends OpMode {
 
     }   // end method initTfod()
 
-    private String detectProp() {
-
+    private String detectProp(String autonColor) {
+        // set default pos to right
         String pos = "right";
+        // get list of all recognitions
         List<Recognition> currentRecognitions = tfod.getRecognitions();
-
+        // if there are any recognitions
         if (currentRecognitions.size() > 0) {
+            // get the first recognition
             Recognition recognition = currentRecognitions.get(0);
 
-            double x = (recognition.getLeft() + recognition.getRight()) / 2;
-            if (x < 300) {
-                telemetry.addLine("Spike Mark: left");
-                pos = "left";
-            } else {
-                telemetry.addLine("Spike Mark: middle");
-                pos = "middle";
+            // check if the recognition label matches the autonomous color and its confidence is above 70 percent
+            if (recognition.getLabel().equals(autonColor) && recognition.getConfidence() > 0.6) {
+                // get the x position of the recognition
+                double x = (recognition.getLeft() + recognition.getRight()) / 2;
+                // if the x position is less than 300 (on the left)
+                if (x < 300) {
+                    // set the pos to left
+                    telemetry.addLine("Spike Mark: left");
+                    pos = "left";
+                } else { // if the x position is more than 300 (on the right)
+                    // set the pos to middle (bc the camera can only see left and middle spike marks)
+                    telemetry.addLine("Spike Mark: middle");
+                    pos = "middle";
+                }
             }
         }
 

@@ -40,7 +40,7 @@ public class Auton_BlueBackdrop extends OpMode {
 
         int i = 0;
         while (i < 300 && pos.equals("right")) {
-            pos = detectProp();
+            pos = detectProp("Blue Marker");
             telemetry.update();
             sleep(20);
             i++;
@@ -75,7 +75,7 @@ public class Auton_BlueBackdrop extends OpMode {
                 robot.returnAfterBusy();
                 robot.setDropServo(.5); //Drop pixel
                 sleep(1000);
-                robot.drive(-2, 0, 0.5); //Mv back to wall
+                robot.drive(-3, 0, 0.4); //Mv back to wall
                 robot.returnAfterBusy();
                 robot.setDropServo(0.045);
                 sleep(1000);
@@ -85,7 +85,7 @@ public class Auton_BlueBackdrop extends OpMode {
                 robot.returnAfterBusy();
                 break;
             case "middle":
-                robot.drive(0, 33, 1); //Mv to spike
+                robot.drive(0, 32, 1); //Mv to spike
                 robot.returnAfterBusy();
                 robot.turn(90, 1); //Turn to orient w/ spike mark
                 robot.returnAfterBusy();
@@ -128,7 +128,7 @@ public class Auton_BlueBackdrop extends OpMode {
                 sleep(1500);
                 robot.backIntake(0);
                 robot.middle(0);
-                robot.drive(-2, 0, 1);//Lightly push pixel on mark
+                robot.drive(-4, 0, 1);//Lightly push pixel on mark
                 robot.returnAfterBusy();
                 robot.drive(34, 0, 1); //Move to middle drop pos
                 robot.returnAfterBusy();
@@ -141,6 +141,8 @@ public class Auton_BlueBackdrop extends OpMode {
                 }
                 robot.stopWheels(); //When we get to target distance, stop
                 robot.drive(0, 4, 1); //Mv to right drop pos
+                robot.returnAfterBusy();
+                robot.drive(0.5, 0, 1); //Mv to right drop pos
                 robot.returnAfterBusy();
                 robot.setDropServo(.5); //Drop pixel
                 sleep(1000);
@@ -230,21 +232,30 @@ public class Auton_BlueBackdrop extends OpMode {
 
     }   // end method initTfod()
 
-    private String detectProp() {
-
+    private String detectProp(String autonColor) {
+        // set default pos to right
         String pos = "right";
+        // get list of all recognitions
         List<Recognition> currentRecognitions = tfod.getRecognitions();
-
+        // if there are any recognitions
         if (currentRecognitions.size() > 0) {
+            // get the first recognition
             Recognition recognition = currentRecognitions.get(0);
 
-            double x = (recognition.getLeft() + recognition.getRight()) / 2;
-            if (x < 300) {
-                telemetry.addLine("Spike Mark: left");
-                pos = "left";
-            } else {
-                telemetry.addLine("Spike Mark: middle");
-                pos = "middle";
+            // check if the recognition label matches the autonomous color and its confidence is above 70 percent
+            if (recognition.getLabel().equals(autonColor) && recognition.getConfidence() > 0.7) {
+                // get the x position of the recognition
+                double x = (recognition.getLeft() + recognition.getRight()) / 2;
+                // if the x position is less than 300 (on the left)
+                if (x < 300) {
+                    // set the pos to left
+                    telemetry.addLine("Spike Mark: left");
+                    pos = "left";
+                } else { // if the x position is more than 300 (on the right)
+                    // set the pos to middle (bc the camera can only see left and middle spike marks)
+                    telemetry.addLine("Spike Mark: middle");
+                    pos = "middle";
+                }
             }
         }
 
