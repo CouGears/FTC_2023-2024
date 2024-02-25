@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -56,6 +55,7 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
         DropServo = hardwareMap.get(Servo.class, "DropServo");
         AirplaneLaunch = hardwareMap.get(Servo.class, "AirplaneLaunch");
         PullUp = hardwareMap.get(DcMotor.class, "PullUp");
+
         red1= hardwareMap.get(DigitalChannel.class, "red1");
         green1= hardwareMap.get(DigitalChannel.class, "green1");
         red2= hardwareMap.get(DigitalChannel.class, "red2");
@@ -65,12 +65,7 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
         color = hardwareMap.get(ColorSensor.class, "Color");
         color2 =hardwareMap.get(ColorSensor.class, "Color2");
 
-        red1.setMode(DigitalChannel.Mode.OUTPUT);
-        green1.setMode(DigitalChannel.Mode.OUTPUT);
-        red2.setMode(DigitalChannel.Mode.OUTPUT);
-        green2.setMode(DigitalChannel.Mode.OUTPUT);
-        red3.setMode(DigitalChannel.Mode.OUTPUT);
-        green3.setMode(DigitalChannel.Mode.OUTPUT);
+
         motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -170,59 +165,45 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
                     IntakeString.setPower(0.0);
                 }
                 // color sensors 1- green 2-purple 3- yellow all- white (4)
-                if (color.red() > 0 &&  color.green() > 0 &&  color.blue() > 0 ) {
-                    if ((color.green()> 2000 && color.blue()> 2000)||(color2.green()> 2000 && color2.blue()> 2000)) {
-                        pixel_color = 4;
-                    } else if ((color.green()> 1000&& color.red()> 850 && color.blue() < 1000) || (color2.green()> 1000&& color2.red()> 850 && color2.blue() < 1000)) {
-                        pixel_color = 3;
-                    } else if ((color.green()> 1000 && color.blue()< 1000)||(color2.green()> 1000 && color2.blue()< 1000) ) {
-                        pixel_color = 1;
-                    } else if ((color.blue() > 1550 && color.red() < 1380) || (color2.blue() > 1550 && color2.red() < 1380)) {
-                        pixel_color = 2;
-                    }
+                if ((color.green()> 2000 && color.blue()> 2000)||(color2.green()> 2000 && color2.blue()> 2000)) {
+                    pixel_color = 4;
+                } else if ((color.green()> 1000&& color.red()> 850 && color.blue() < 1000) || (color2.green()> 1000&& color2.red()> 850 && color2.blue() < 1000)) {
+                    pixel_color = 3;
+                } else if ((color.green()> 1000 && color.blue()< 1000)||(color2.green()> 1000 && color2.blue()< 1000) ) {
+                    pixel_color = 1;
+                } else if ((color.blue() > 1550 && color.red() < 1380) || (color2.blue() > 1550 && color2.red() < 1380)) {
+                    pixel_color = 2;
+                }
 
-                else{ pixel_color = 0;}}
+                else{ pixel_color = 0;}
                 switch (pixel_color){
                     case 1:
                         // telemetry.addLine("Reading: green");
-                        red1.setState(true);
-                        green1.setState(true);
+                        telemetry.addData("Middle intake:", "Green Pixel Loaded");
                         break;
                     case 2:
-                        telemetry.addLine("Reading: purple");
-                        red2.setState(true);
-                        green2.setState(true);
+                        //telemetry.addLine("Reading: purple");
+                        telemetry.addData("Middle intake:", "Purple Pixel Loaded");
+
                         break;
                     case 3:
                         //telemetry.addLine("Reading: yellow");
-                        red3.setState(true);
-                        green3.setState(true);
+                        telemetry.addData("Middle intake:", "Yellow Pixel Loaded");
+
                         break;
                     case 4:
                         //telemetry.addLine("Reading: white");
-                        red1.setState(true);
-                        green1.setState(true);
-                        red2.setState(true);
-                        green2.setState(true);
-                        red3.setState(true);
-                        green3.setState(true);
+                        telemetry.addData("Middle intake:", "White Pixel Loaded");
+
                         break;
                     case 0:
-                        red1.setState(false);
-                        green1.setState(false);
-                        red2.setState(false);
-                        green2.setState(false);
-                        red3.setState(false);
-                        green3.setState(false);
+                        telemetry.addData("Middle intake:", "No Pixel Sensed");
                         // telemetry.addLine("Reading: No Pixel");
                         break;
 
                 }
 
-                telemetry.addData("Red", color.red());
-                telemetry.addData("Green", color.green());
-                telemetry.addData("Blue", color.blue());
-                telemetry.addData("color 1-g 2-p 3-y 4-w", pixel_color);
+
 
                 telemetry.update();
 
