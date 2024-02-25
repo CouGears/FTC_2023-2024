@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp
 public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
     private DigitalChannel red1,red2, red3, green1, green2, green3;
-    private ColorSensor color;
+    private ColorSensor color, color2;
     public static DcMotor motorBR, motorBL, motorFL, motorFR, BackIntake, MiddleIntake, Lift, PullUp;
     public static CRServo IntakeString;
     public static Servo DropServo, AirplaneLaunch;
@@ -63,6 +63,7 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
         red3= hardwareMap.get(DigitalChannel.class, "red3");
         green3= hardwareMap.get(DigitalChannel.class, "green3");
         color = hardwareMap.get(ColorSensor.class, "Color");
+        color2 =hardwareMap.get(ColorSensor.class, "Color2");
 
 
         motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -164,59 +165,45 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
                     IntakeString.setPower(0.0);
                 }
                 // color sensors 1- green 2-purple 3- yellow all- white (4)
-                if (color.red() > 0 &&  color.green() > 0 &&  color.blue() > 0 ) {
-                    if ((color.red() / color.blue()) > .82 && (color.red() / color.blue()) < 1.23) {
-                        pixel_color = 4;
-                    } else if ((color.green() / color.red()) < 2.15 && (color.green() / color.red()) > 1.5) {
-                        pixel_color = 1;
-                    } else if ((color.green() / color.blue()) > .65 && (color.green() / color.blue()) < 1.1) {
-                        pixel_color = 2;
-                    } else if ((color.red() / color.blue()) > 1.6 && (color.red() / color.blue()) < 2.2) {
-                        pixel_color = 3;
-                    }
+                if ((color.green()> 2000 && color.blue()> 2000)||(color2.green()> 2000 && color2.blue()> 2000)) {
+                    pixel_color = 4;
+                } else if ((color.green()> 1000&& color.red()> 850 && color.blue() < 1000) || (color2.green()> 1000&& color2.red()> 850 && color2.blue() < 1000)) {
+                    pixel_color = 3;
+                } else if ((color.green()> 1000 && color.blue()< 1000)||(color2.green()> 1000 && color2.blue()< 1000) ) {
+                    pixel_color = 1;
+                } else if ((color.blue() > 1550 && color.red() < 1380) || (color2.blue() > 1550 && color2.red() < 1380)) {
+                    pixel_color = 2;
                 }
+
                 else{ pixel_color = 0;}
                 switch (pixel_color){
                     case 1:
                         // telemetry.addLine("Reading: green");
-                        red1.setState(true);
-                        green1.setState(true);
+                        telemetry.addData("Middle intake:", "Green Pixel Loaded");
                         break;
                     case 2:
                         //telemetry.addLine("Reading: purple");
-                        red2.setState(true);
-                        green2.setState(true);
+                        telemetry.addData("Middle intake:", "Purple Pixel Loaded");
+
                         break;
                     case 3:
                         //telemetry.addLine("Reading: yellow");
-                        red3.setState(true);
-                        green3.setState(true);
+                        telemetry.addData("Middle intake:", "Yellow Pixel Loaded");
+
                         break;
                     case 4:
                         //telemetry.addLine("Reading: white");
-                        red1.setState(true);
-                        green1.setState(true);
-                        red2.setState(true);
-                        green2.setState(true);
-                        red3.setState(true);
-                        green3.setState(true);
+                        telemetry.addData("Middle intake:", "White Pixel Loaded");
+
                         break;
                     case 0:
-                        red1.setState(false);
-                        green1.setState(false);
-                        red2.setState(false);
-                        green2.setState(false);
-                        red3.setState(false);
-                        green3.setState(false);
+                        telemetry.addData("Middle intake:", "No Pixel Sensed");
                         // telemetry.addLine("Reading: No Pixel");
                         break;
 
                 }
 
-                telemetry.addData("Red", color.red());
-                telemetry.addData("Green", color.green());
-                telemetry.addData("Blue", color.blue());
-                telemetry.addData("color 1-g 2-p 3-y 4-w", pixel_color);
+
 
                 telemetry.update();
 
