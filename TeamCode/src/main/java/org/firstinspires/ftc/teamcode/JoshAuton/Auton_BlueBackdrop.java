@@ -140,9 +140,7 @@ public class Auton_BlueBackdrop extends OpMode {
                     dist = robot.getBackdropDistance();
                 }
                 robot.stopWheels(); //When we get to target distance, stop
-                robot.drive(0, 4, 1); //Mv to right drop pos
-                robot.returnAfterBusy();
-                robot.drive(0.5, 0, 1); //Mv to right drop pos
+                robot.drive(0.5, 2, 1); //Mv to right drop pos
                 robot.returnAfterBusy();
                 robot.setDropServo(.5); //Drop pixel
                 sleep(1000);

@@ -59,7 +59,7 @@ public class Auton_BlueWing extends OpMode {
                 // drive to prop
                 robot.drive(0, 28, 1);
                 robot.returnAfterBusy();
-                robot.drive(6, 0, 1);
+                robot.drive(4, 0, 1);
                 robot.returnAfterBusy();
                 // move the lift out of the way
                 robot.moveLift(1000, 1, telemetry);
