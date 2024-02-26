@@ -7,7 +7,12 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.lang.Math;
 
 @TeleOp
 public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
@@ -16,6 +21,8 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
     public static DcMotor motorBR, motorBL, motorFL, motorFR, BackIntake, MiddleIntake, Lift, PullUp;
     public static CRServo IntakeString;
     public static Servo DropServo, AirplaneLaunch;
+
+    public static DistanceSensor BackdropDistance;
     private AutonMethods robot = new AutonMethods();
     public int driveswitch = 1;
     private int pixel_color = 0;
@@ -64,6 +71,8 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
         green3= hardwareMap.get(DigitalChannel.class, "green3");
         color = hardwareMap.get(ColorSensor.class, "Color");
         color2 =hardwareMap.get(ColorSensor.class, "Color2");
+
+        BackdropDistance = hardwareMap.get(DistanceSensor.class, "BackdropDistance");
 
 
         motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -206,6 +215,17 @@ public class OneDiver_CompetitionDriving2024 extends LinearOpMode {
 
 
                 telemetry.update();
+
+                double distanceFromBackdrop = BackdropDistance.getDistance(DistanceUnit.INCH);
+
+                double radian120 = 120 * (3.14/180);
+                double radian15 = 15 * (3.14/180);
+
+                double sin120 = Math.sin(radian120);
+                double sin15 = Math.sin(radian15);
+
+                double liftLimitInches = distanceFromBackdrop * (sin120 / sin15);
+
 
 
                 //LIFT
